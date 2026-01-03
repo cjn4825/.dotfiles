@@ -27,4 +27,4 @@ By building and using this environment for more than a year now, I've gained and
 
 # Example of Environment
 
-![example picture](Neovim_example.png)
+![example picture](nvim/Neovim_example.png)
