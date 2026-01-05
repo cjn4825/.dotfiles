@@ -7,9 +7,12 @@ In the process of reducing the number of plugins needed to complete tasks withou
 
 One summer, I bought an older laptop for the goal of installing some Linux distribution and learn more about it. At the time, I was thinking this laptop would be some sort of hacking lab or something, and I had the idea to try to use the Command Line whenever I could. I tried nano, then emacs, but settled on Neovim due to its customizability and documentation availability. After months and months of researching and getting comfortable using it, I started to appreciate and have a better feel for Linux in general.
 
-# Other Files
+# Folders
 
-## bash/.bashrc
+## nvim
+This includes the bulk and focus of this project, which is all the config files needed for Neovim to work like how I want it to...again its a work in progress so there WILL be errors that pop up now and again, but will be fixed soon.
+
+## bash
 This includes cosmetic changes i've made to the cmd prompt line which includes colors that match the theme, username and hostname on the system, and a status that shows what git branch you're in
 
 ## tmux
