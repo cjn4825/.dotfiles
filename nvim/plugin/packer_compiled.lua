@@ -134,11 +134,6 @@ _G.packer_plugins = {
     path = "/home/cjn/.local/share/nvim/site/pack/packer/start/gruvbox",
     url = "https://github.com/morhetz/gruvbox"
   },
-  ["lazygit.nvim"] = {
-    loaded = true,
-    path = "/home/cjn/.local/share/nvim/site/pack/packer/start/lazygit.nvim",
-    url = "https://github.com/kdheepak/lazygit.nvim"
-  },
   ["lualine.nvim"] = {
     loaded = true,
     path = "/home/cjn/.local/share/nvim/site/pack/packer/start/lualine.nvim",

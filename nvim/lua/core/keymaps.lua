@@ -11,51 +11,7 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.shiftround = true
 vim.opt.expandtab = true
--- function ResizeOppositeSplit(direction)
---   local win = vim.api.nvim_get_current_win()
---   local cur_pos = vim.api.nvim_win_get_cursor(win) -- Save cursor position {row, col}
-
---   if direction == "left" then
---     vim.cmd("wincmd h")
---     if vim.api.nvim_get_current_win() ~= win then
---       vim.cmd("vertical resize -2")
---     else
---       vim.cmd("wincmd l | vertical resize +2")
---     end
---   elseif direction == "right" then
---     vim.cmd("wincmd l")
---     if vim.api.nvim_get_current_win() ~= win then
---       vim.cmd("vertical resize -2")
---     else
---       vim.cmd("wincmd h | vertical resize +2")
---     end
---   elseif direction == "up" then
---     vim.cmd("wincmd k")
---     if vim.api.nvim_get_current_win() ~= win then
---       vim.cmd("resize -2")
---     else
---       vim.cmd("wincmd j | resize +2")
---     end
---   elseif direction == "down" then
---     vim.cmd("wincmd j")
---     if vim.api.nvim_get_current_win() ~= win then
---       vim.cmd("resize -2")
---     else
---       vim.cmd("wincmd k | resize +2")
---     end
---   end
-
---   -- Restore cursor position
---   vim.api.nvim_set_current_win(win) -- Go back to the original window
---   vim.api.nvim_win_set_cursor(win, cur_pos) -- Restore cursor position
--- end
-
--- -- Map keys to call the function
--- vim.keymap.set("n", "<A-h>",  function() ResizeOppositeSplit("left") end,  { noremap = true, silent = true })
--- vim.keymap.set("n", "<A-l>", function() ResizeOppositeSplit("right") end, { noremap = true, silent = true })
--- vim.keymap.set("n", "<A-k>",    function() ResizeOppositeSplit("up") end,    { noremap = true, silent = true })
--- vim.keymap.set("n", "<A-j>",  function() ResizeOppositeSplit("down") end,  { noremap = true, silent = true })
-
+vim.g.tmux_navigator_no_mappings = 1
 vim.cmd [[
     set encoding=utf-8
     set ruler
@@ -74,7 +30,7 @@ vim.cmd [[
     nnoremap <leader>v <cmd>vsplit<cr>
     nnoremap <leader>h <cmd>split<cr>
 
-    set clipboard=unnamedplus
+    set clipboard+=unnamedplus
 
     set noswapfile
 
