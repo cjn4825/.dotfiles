@@ -11,12 +11,6 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.shiftround = true
 vim.opt.expandtab = true
-
-vim.api.nvim_set_hl(0, "DiagnosticError", { fg = "#fb4934" }) -- Red for errors
-vim.api.nvim_set_hl(0, "DiagnosticWarn", { fg = "#fabd2f" }) -- Yellow for warnings
-vim.api.nvim_set_hl(0, "DiagnosticInfo", { fg = "#83a598" }) -- Blue for info
-vim.api.nvim_set_hl(0, "DiagnosticHint", { fg = "#8ec07c" }) -- Aqua for hints
-
 -- function ResizeOppositeSplit(direction)
 --   local win = vim.api.nvim_get_current_win()
 --   local cur_pos = vim.api.nvim_win_get_cursor(win) -- Save cursor position {row, col}
@@ -73,6 +67,8 @@ vim.cmd [[
     set t_ut=
     set gcr=a:blinkon1
 
+    let g:loaded_perl_provider = 0
+    let g:loaded_node_provider = 0
 
     "" split screen vert and horizontal
     nnoremap <leader>v <cmd>vsplit<cr>

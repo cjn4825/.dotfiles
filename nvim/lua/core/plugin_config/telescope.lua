@@ -4,8 +4,21 @@ local devicons = require("nvim-web-devicons")
 
 devicons.setup()
 
-vim.keymap.set('n', '<leader>f', builtin.find_files, {silent=true})
-vim.keymap.set('n', '<leader>g', builtin.live_grep, {silent=true})
+-- function for find files that starts at user home directory
+local findFilesHome = function()
+  builtin.find_files({
+    cwd = vim.fn.expand('~')
+  })
+end
+
+local grepFilesHome = function()
+  builtin.live_grep({
+    cwd = vim.fn.expand('~')
+  })
+end
+
+vim.keymap.set('n', '<leader>f', findFilesHome, {silent=true})
+vim.keymap.set('n', '<leader>g', grepFilesHome, {silent=true})
 vim.keymap.set('n', '<leader>r', builtin.oldfiles, {silent=true})
 vim.keymap.set("n", "<leader>b", ":Telescope file_browser path=%:p:h select_buffer=true<CR>", {silent=true})
 

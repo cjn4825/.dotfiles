@@ -47,7 +47,7 @@ return require('packer').startup(function(use)
     use 'hrsh7th/cmp-buffer'
     use 'hrsh7th/cmp-nvim-lsp'
     use 'hrsh7th/cmp-path'
-    use 'L3MON4D3/LuaSnip'
+    use {'L3MON4D3/LuaSnip', run = "make install_jsregexp"}
     use 'saadparwaiz1/cmp_luasnip'
     use 'rafamadriz/friendly-snippets'
     use 'mfussenegger/nvim-jdtls'
@@ -55,7 +55,6 @@ return require('packer').startup(function(use)
     use 'christoomey/vim-tmux-navigator'
     use 'lewis6991/gitsigns.nvim'
     use 'Wansmer/treesj'
-    use 'pwntester/octo.nvim'
 
   if packer_bootstrap then
     require('packer').sync()
