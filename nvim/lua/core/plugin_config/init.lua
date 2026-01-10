@@ -9,6 +9,7 @@ require("core.plugin_config.lualine")
 require("core.plugin_config.whitespace")
 require("core.plugin_config.buffermanager")
 require("core.plugin_config.tmux_navigator")
+require("core.plugin_config.gruvbox")
 
 
 

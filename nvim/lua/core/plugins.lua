@@ -20,14 +20,7 @@ local packer_bootstrap = ensure_packer()
 return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
     use 'ntpeters/vim-better-whitespace'
-
-    use({
-    "morhetz/gruvbox",
-    config = function()
-        vim.cmd("colorscheme gruvbox")
-    end
-    })
-
+    use 'morhetz/gruvbox'
     use 'nvim-lualine/lualine.nvim'
     use 'akinsho/bufferline.nvim'
     use 'nvim-tree/nvim-web-devicons'
