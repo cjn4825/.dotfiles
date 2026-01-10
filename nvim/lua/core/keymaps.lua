@@ -12,6 +12,8 @@ vim.opt.shiftwidth = 4
 vim.opt.shiftround = true
 vim.opt.expandtab = true
 vim.g.tmux_navigator_no_mappings = 1
+vim.o.termguicolors = true
+
 vim.cmd [[
     set encoding=utf-8
     set ruler
@@ -22,6 +24,8 @@ vim.cmd [[
     set signcolumn=yes
     set t_ut=
     set gcr=a:blinkon1
+
+    hi WinSeparator guifg=#3c3836
 
     let g:loaded_perl_provider = 0
     let g:loaded_node_provider = 0
