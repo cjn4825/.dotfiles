@@ -31,13 +31,13 @@ return {
 
       require("mason").setup()
 
-      require("mason-lspconfig").setup({
-        ensure_installed = {
-          "pyright",
-          "bashls",
-          "lua_ls",
-        },
-      })
+--       require("mason-lspconfig").setup({
+--         ensure_installed = {
+--           "pyright",
+--           "bashls",
+--           "lua_ls",
+--         },
+--       })
 
       vim.diagnostic.config({
         virtual_text = true,
