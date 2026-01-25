@@ -28,7 +28,7 @@ echo "Appending source spript to .bashrc..."
 read -r -d '' SCRIPT << 'EOF'
 
 # --- start of dotfiles config link ---
-for file in "$HOME/.bashrc.d/*"; do
+for file in "$HOME/.bashrc.d"/*; do
     [ -r "$file" ] && . "$file"
 done
 unset file
