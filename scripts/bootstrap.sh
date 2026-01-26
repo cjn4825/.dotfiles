@@ -4,8 +4,6 @@ set -e
 
 DOTFILES="$HOME/dotfiles"
 
-export BREW_HOME="$HOME/.linuxbrew"
-
 # creates .config if not already
 if [ ! -d $HOME/.config ]; then
     echo "Creating .config dir..."
@@ -18,12 +16,7 @@ if [ ! -d $HOME/.local/bin ]; then
     mkdir -p $HOME/.local/bin
 fi
 
-# creates homebrew home dir if not already
-if [ ! -d $BREW_HOME/bin ]; then
-    echo "Creating .linuxbrew/bin dir..."
-    mkdir -p "$BREW_HOME/bin"
-fi
-
+# function that makes dotfiles link easier
 dotlink() {
     local dotLocation="$DOTFILES/$1"
     local confLocation="$HOME/$2"
@@ -54,13 +47,12 @@ unset file
 # append the script to .bashrc
 echo "$SCRIPT" >> "$HOME/.bashrc"
 
-# ------------------------------------------working-----------------------------------------------
-
 # install mise for user wide package management with binaries
 curl -Lo mise https://mise.jdx.dev/mise-latest-linux-x64
 chmod +x mise
-mv mise $HOME/.local/bin
+mv mise "$HOME/.local/bin"
 
+# function that makes mise link to .local/bin easier
 miselink() {
     local miseLocation="$HOME/.local/share/mise/installs/$1"
     local binLocation="$HOME/.local/bin/$2"
@@ -69,43 +61,34 @@ miselink() {
     ln -sfn "$miseLocation" "$binLocation"
 }
 
-"$HOME/.local/bin/mise" use neovim@latest
-"$HOME/.local/bin/mise" use tmux@latest
-"$HOME/.local/bin/mise" use ripgrep@latest
-"$HOME/.local/bin/mise" use fd@latest
+MISE="$HOME/.local/bin/mise"
 
-miselink neovim/latest/bin/nvim nvim
-miselink tmux/latest/tmux tmux
-miselink ripgrep/latest/ripgrep-*-x86_64-unknown-linux-musl/rg rg
-miselink fd/latest/fd-*-x86_64-unknown-linux-musl/fd fd
+# sets specific versions to use
+NEOVIM_VERSION="0.11.6"
+TMUX_VERSION="3.6a"
+RIPGREP_VERSION="15.1.0"
+FD_VERSION="10.3.0"
+FZF_VERSION="0.67.0"
+GH_VERSION="2.86.0"
 
-##################MAKE SURE TO DELETE MISE AFTERWARDS#############################
+# installs tooling with mise
+$MISE use neovim@$NEOVIM_VERSION
+$MISE use tmux@$TMUX_VERSION
+$MISE use ripgrep@$RIPGREP_VERSION
+$MISE use fd@$FD_VERSION
+$MISE use fzf@$FZF_VERSION
+$MISE use gh@$GH_VERSION
 
-# install neovim tar
-# echo "Installing neovim..."
-# curl -fsSL https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz \
-# | tar -xz -C "$HOME/.local/share/nvim-dist" --strip-components=1
-# ln -sfn "$HOME/.local/nvim-dist/bin/nvim" "$HOME/.local/bin/nvim"
+# uses miselink to link mise tools to bin
+miselink neovim/$NEOVIM_VERSION/bin/nvim nvim
+miselink tmux/$TMUX_VERSION/tmux tmux
+miselink ripgrep/$RIPGREP_VERSION/ripgrep-$RIPGREP_VERSION-x86_64-unknown-linux-musl/rg rg
+miselink fd/$FD_VERSION/fd-v$FD_VERSION-x86_64-unknown-linux-musl/fd fd
+miselink fzf/$FZF_VERSION/fzf fzf
+miselink gh/$GH_VERSION/gh_{$GH_VERSION}_linux_amd64/bin/gh gh
 
-# # install tmux via community app image
-# echo "Installing tmux..."
-# curl -LO https://github.com/tmux/tmux-builds/releases/tmux-3.6a-linux-x86_64.tar.gz \
-#     | tar -xz -C "$HOME/.local/bin/tmux-dist" --strip-components=1 \
-# ln -sfn "$HOME/.local/bin/tmux-dist/bin/tmux" "$HOME/.local/bin/tmux"
+# installs gh-dash for terminal github integration
+$HOME/.local/bin/gh extension install dlvhdr/gh-dash
 
-# # install ripgrep dependency
-# echo "Installing ripgrep..."
-# curl -fsSL https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep-x86_64-unknown-linux-musl.tar.gz \
-#     | tar -xz -C "$HOME/.local/bin" --strip-components=1 --wildcards '*/rg'
-
-# # install fd dependency
-# curl -fsSL https://github.com/sharkdp/fd/releases/latest/download/fd-v10.2.0-x86_64-unknown-linux-musl.tar.gz \
-#     | tar -xz -C "$HOME/.local/bin" --strip-components=1 --wildcards '*/fd'
-
-# # install tree-sitter cli dependency
-# # Since this is a .gz use gunzip
-# curl -fsSL https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz \
-#     | gunzip -c > "$HOME/.local/bin/tree-sitter"
-# chmod +x "$HOME/.local/bin/tree-sitter"
-
+##################MAKE SURE TO DELETE MISE AFTERWARDS in local host#############################
 echo "Bootstrapping finished"
