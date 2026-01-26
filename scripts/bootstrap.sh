@@ -54,57 +54,40 @@ unset file
 # append the script to .bashrc
 echo "$SCRIPT" >> "$HOME/.bashrc"
 
-# download brew if not already for user-space package management
-# if ! command -v brew &>/dev/null; then
-#     echo "Installing Homebrew..."
-#     git clone https://github.com/Homebrew/brew "$BREW_HOME/Homebrew"
-#     ln -sfn "$BREW_HOME/Homebrew/bin/brew" "$BREW_HOME/bin/brew"
-# fi
+# install neovim with appimage for fastest download speed
+echo "Installing neovim..."
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+tar -xzf nvim-linux-x86_64.tar.gz
+mv nvim-linux-x86_64 $HOME/.local/nvim-dist
+ln -sfn $HOME/.local/nvim-dist/bin/nvim $HOME/.local/bin/nvim
+rm nvim-linux-x86_64.tar.gz
 
-# adds homebrew to the current terminal session to allow package installs below
-# eval "$($BREW_HOME/bin/brew shellenv)"
+# install tmux via community static binary
+curl -fLo "$HOME/.local/bin/tmux" https://github.com/romkatv/tmux-static/releases/latest/download/tmux-linux-x86_64
+chmod +x "$HOME/.local/bin/tmux"
 
-# echo "Downloading packages via Homebrew..."
-
-# removed man pages?
-
-# packages=(
-#     tmux
-#     shellcheck
-#     luarocks
-#     ripgrep
-#     fd
-#     )
-
-# for package in "${packages[@]}"; do
-#     echo "Installing package: $package"
-#     brew install $package
-# done
-
-# luarocks install jsregexp dependency for neovim
-# luarocks install jsregexp
-
-# install ripgrep
+# install ripgrep dependency
 echo "Installing ripgrep..."
-curl -L -o rg.tar.gz https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep-x86_64-unknown-linux-musl.tar.gz
+curl -Lo rg.tar.gz https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep-x86_64-unknown-linux-musl.tar.gz
 tar -xzf rg.tar.gz
 mv ripgrep-*/rg "$HOME/.local/bin/"
 rm -rf ripgrep-* rg.tar.gz
 chmod +x "$HOME/.local/bin/rg"
 
-# install fd
+# install fd dependency
 echo "Installing fd..."
-curl -L -o fd.tar.gz https://github.com/sharkdp/fd/releases/latest/download/fd-v10.2.0-x86_64-unknown-linux-musl.tar.gz
+curl -Lo fd.tar.gz https://github.com/sharkdp/fd/releases/latest/download/fd-v10.2.0-x86_64-unknown-linux-musl.tar.gz
 tar -xzf fd.tar.gz
+# Use a wildcard here too
 mv fd-*/fd "$HOME/.local/bin/"
 rm -rf fd-* fd.tar.gz
 chmod +x "$HOME/.local/bin/fd"
 
-# 3. Install tree-sitter cli
+# install tree-sitter cli dependency
 echo "Installing treesitter-cli..."
 curl -fLo "$HOME/.local/bin/tree-sitter.gz" https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz
 
-# if the file download is a gunzip already then just rename it
+# if already unzipped
 if file "$HOME/.local/bin/tree-sitter.gz" | grep -q "gzip"; then
     gunzip -f "$HOME/.local/bin/tree-sitter.gz"
 else
@@ -112,5 +95,4 @@ else
 fi
 chmod +x "$HOME/.local/bin/tree-sitter"
 
-echo "Packages installed"
 echo "Bootstrapping finished"
