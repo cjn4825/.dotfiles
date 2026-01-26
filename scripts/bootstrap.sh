@@ -50,17 +50,14 @@ echo "Dotfiles linked to config dirs"
 echo "Appending source spript to .bashrc..."
 
 # add .bashrc.d to be sourced by .bashrc
-read -r -d '' SCRIPT << 'EOF'
-
+SCRIPT='
 # --- start of dotfiles config link ---
 for file in "$HOME/.bashrc.d"/*; do
     [ -r "$file" ] && . "$file"
 done
 unset file
 # --- end of dotfile config link ---
-
-EOF
-
+'
 # append the script to .bashrc
 echo "$SCRIPT" >> "$HOME/.bashrc"
 
