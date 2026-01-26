@@ -4,17 +4,20 @@ set -e
 
 DOTFILES="$HOME/dotfiles"
 
+export BREW_HOME="$HOME/.linuxbrew"
+
 # creates .config if not already
 if [ ! -d $HOME/.config ]; then
     echo "Creating .config dir..."
     mkdir -p $HOME/.config
 fi
 
+# --- no need to create if the folder is being linked anyways
 # creates .bashrc.d if not already
-if [ ! -d $HOME/.bashrc.d ]; then
-    echo "Creating .bashrc.d dir..."
-    mkdir -p $HOME/.bashrc.d
-fi
+# if [ ! -d $HOME/.bashrc.d ]; then
+#     echo "Creating .bashrc.d dir..."
+#     mkdir -p $HOME/.bashrc.d
+# fi
 
 # creates .local/bin if not already
 if [ ! -d $HOME/.local/bin ]; then
@@ -27,8 +30,6 @@ if [ ! -d $BREW_HOME/bin ]; then
     echo "Creating .linuxbrew/bin dir..."
     mkdir -p "$BREW_HOME/bin"
 fi
-
-export BREW_HOME="$HOME/.linuxbrew"
 
 slink() {
     local dotLocation="$DOTFILES/$1"
@@ -77,7 +78,7 @@ echo "Downloading packages via Homebrew..."
 
 # removed man pages?
 
-packages = (
+packages=(
     neovim
     curl
     tmux
@@ -107,7 +108,8 @@ for package in "${packages[@]}"; do
     brew install $package
 done
 
-# luarocks install jsregexp? or homebrew?
+# luarocks install jsregexp dependency for neovim
+luarocks install jsregexp
 
 echo "Packages installed"
 echo "Bootstrapping finished"
