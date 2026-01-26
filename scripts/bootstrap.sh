@@ -71,7 +71,7 @@ curl https://api.github.com/repos/nelsonenzo/tmux-appimage/releases/latest \
 | cut -d : -f 2,3 \
 | tr -d \" \
 | wget -qi - \
-&& chmod +x tmux.appimagee
+&& chmod +x tmux.appimage
 mv tmux.appimage ~/.local/bin/tmux
 
 # install ripgrep dependency
