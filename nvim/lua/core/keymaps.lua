@@ -13,7 +13,6 @@ vim.opt.shiftround = true
 vim.opt.expandtab = true
 vim.g.tmux_navigator_no_mappings = 1
 vim.o.termguicolors = true
-
 vim.cmd [[
     set encoding=utf-8
     set ruler

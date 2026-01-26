@@ -85,10 +85,34 @@ echo "$SCRIPT" >> "$HOME/.bashrc"
 # luarocks install jsregexp
 
 # install neovim with appimage for fastest download speed
+echo "Installing neovim..."
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
 tar -xzf nvim-linux-x86_64.tar.gz
 mv nvim-linux-x86_64 $HOME/.local/nvim-dist
 ln -sfn $HOME/.local/nvim-dist/bin/nvim $HOME/.local/bin/nvim
+
+# install ripgrep dependency
+echo "Installing ripgrep..."
+curl -LO https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep-14.1.0-x86_64-unknown-linux-musl.tar.gz
+tar -xzf ripgrep-14.1.0-x86_64-unknown-linux-musl.tar.gz
+mv ripgrep-14.1.0-x86_64-unknown-linux-musl/rg "$HOME/.local/bin/"
+rm -rf ripgrep-14.1.0-x86_64-unknown-linux-musl*
+chmod +x "$HOME/.local/bin/rg"
+
+# install fd dependency
+echo "Installing fd..."
+curl -LO https://github.com/sharkdp/fd/releases/latest/download/fd-v10.2.0-x86_64-unknown-linux-musl.tar.gz
+tar -xzf fd-v10.2.0-x86_64-unknown-linux-musl.tar.gz
+mv fd-v10.2.0-x86_64-unknown-linux-musl/fd "$HOME/.local/bin/"
+rm -rf fd-v10.2.0-x86_64-unknown-linux-musl*
+chmod +x "$HOME/.local/bin/fd"
+
+# install tree-sitter cli dependency
+echo "Installing treesitter-cli..."
+curl -LO https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz
+gunzip tree-sitter-linux-x64.gz
+mv tree-sitter-linux-x64 $HOME/.local/bin/tree-sitter
+chmod +x $HOME/.local/bin/tree-sitter
 
 echo "Packages installed"
 echo "Bootstrapping finished"

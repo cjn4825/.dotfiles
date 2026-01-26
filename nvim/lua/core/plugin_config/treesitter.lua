@@ -6,6 +6,7 @@ return {
     config = function()
     require'nvim-treesitter'.setup {
         auto_install = true,
+        sync_install = false,
         highlight = {
           enable = true,
         },
