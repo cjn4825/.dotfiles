@@ -61,6 +61,9 @@ curl -Lo mise https://mise.jdx.dev/mise-latest-linux-x64
 chmod +x mise
 mv mise $HOME/.local/bin
 
+# need to alias mise script wise to allow just "mise" in below use lines
+alias mise="$HOME/.local/bin/mise"
+
 miselink() {
     local miseLocation="$HOME/.local/share/mise/installs/$1"
     local binLocation="$HOME/.local/bin/$2"
