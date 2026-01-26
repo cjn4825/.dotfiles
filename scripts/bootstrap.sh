@@ -54,19 +54,19 @@ unset file
 # append the script to .bashrc
 echo "$SCRIPT" >> "$HOME/.bashrc"
 
+# ------------------------------------------working-----------------------------------------------
+
 # install neovim with appimage for fastest download speed
 echo "Installing neovim..."
 curl -fsSL https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz \
-| tar -xz -C "$HOME/.local/nvim-dist" --strip-components=1
+| tar -xz -C "$HOME/.local/bin/nvim-dist" --strip-components=1
 ln -sfn "$HOME/.local/nvim-dist/bin/nvim" "$HOME/.local/bin/nvim"
-
-# ------------------------------------------working-----------------------------------------------
 
 # install tmux via community app image
 echo "Installing tmux..."
 curl -LO https://github.com/tmux/tmux-builds/releases/tmux-3.6a-linux-x86_64.tar.gz \
-    | tar -xz -C "$HOME/.local/tmux-dist" --strip-components=1 \
-ln -sfn "$HOME/.local/tmux-dist/bin/tmux" "$HOME/.local/bin/tmux"
+    | tar -xz -C "$HOME/.local/bin/tmux-dist" --strip-components=1 \
+ln -sfn "$HOME/.local/bin/tmux-dist/bin/tmux" "$HOME/.local/bin/tmux"
 
 # install ripgrep dependency
 echo "Installing ripgrep..."
