@@ -40,7 +40,7 @@ slink() {
 echo "Linking dotfiles to host..."
 
 # Links files downloaded from github to user environment config locations
-slink "bash/.bashrc.d" ".bashrc.d"
+slink "bash/.bashrc.d" ""
 slink "nvim" ".config/nvim"
 slink "tmux/.tmux.conf" ".tmux.conf"
 
