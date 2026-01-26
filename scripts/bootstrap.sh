@@ -55,34 +55,34 @@ unset file
 echo "$SCRIPT" >> "$HOME/.bashrc"
 
 # download brew if not already for user-space package management
-if ! command -v brew &>/dev/null; then
-    echo "Installing Homebrew..."
-    git clone https://github.com/Homebrew/brew "$BREW_HOME/Homebrew"
-    ln -sfn "$BREW_HOME/Homebrew/bin/brew" "$BREW_HOME/bin/brew"
-fi
+# if ! command -v brew &>/dev/null; then
+#     echo "Installing Homebrew..."
+#     git clone https://github.com/Homebrew/brew "$BREW_HOME/Homebrew"
+#     ln -sfn "$BREW_HOME/Homebrew/bin/brew" "$BREW_HOME/bin/brew"
+# fi
 
 # adds homebrew to the current terminal session to allow package installs below
-eval "$($BREW_HOME/bin/brew shellenv)"
+# eval "$($BREW_HOME/bin/brew shellenv)"
 
-echo "Downloading packages via Homebrew..."
+# echo "Downloading packages via Homebrew..."
 
 # removed man pages?
 
-packages=(
-    tmux
-    shellcheck
-    luarocks
-    ripgrep
-    fd
-    )
+# packages=(
+#     tmux
+#     shellcheck
+#     luarocks
+#     ripgrep
+#     fd
+#     )
 
-for package in "${packages[@]}"; do
-    echo "Installing package: $package"
-    brew install $package
-done
+# for package in "${packages[@]}"; do
+#     echo "Installing package: $package"
+#     brew install $package
+# done
 
 # luarocks install jsregexp dependency for neovim
-luarocks install jsregexp
+# luarocks install jsregexp
 
 # install neovim with appimage for fastest download speed
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
