@@ -65,7 +65,7 @@ EOF
 echo "$SCRIPT" >> "$HOME/.bashrc"
 
 # download brew if not already for user-space package management
-if [ ! command -v brew &>/dev/null ]; then
+if ! command -v brew &>/dev/null; then
     echo "Installing Homebrew..."
     git clone https://github.com/Homebrew/brew "$BREW_HOME/Homebrew"
     ln -sfn "$BREW_HOME/Homebrew/bin/brew" "$BREW_HOME/bin/brew"
