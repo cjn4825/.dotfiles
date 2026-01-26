@@ -56,49 +56,31 @@ echo "$SCRIPT" >> "$HOME/.bashrc"
 
 # install neovim with appimage for fastest download speed
 echo "Installing neovim..."
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-tar -xzf nvim-linux-x86_64.tar.gz
-mv nvim-linux-x86_64 $HOME/.local/nvim-dist
-ln -sfn $HOME/.local/nvim-dist/bin/nvim $HOME/.local/bin/nvim
-rm nvim-linux-x86_64.tar.gz
+curl -fsSL https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz \
+| tar -xz -C "$HOME/.local/nvim-dist" --strip-components=1
+ln -sfn "$HOME/.local/nvim-dist/bin/nvim" "$HOME/.local/bin/nvim"
 
 # ------------------------------------------working-----------------------------------------------
 
 # install tmux via community app image
 echo "Installing tmux..."
-curl -LO https://github.com/tmux/tmux/releases/download/3.3a/tmux-3.3a.tar.gz
-tar xzvf tmux-3.3a.tar.gz
-cd tmux-3.3a
-./configure
-make && make install
+curl -LO https://github.com/tmux/tmux-builds/releases/tmux-3.6a-linux-x86_64.tar.gz \
+    | tar -xz -C "$HOME/.local/tmux-dist" --strip-components=1 \
+ln -sfn "$HOME/.local/tmux-dist/bin/tmux" "$HOME/.local/bin/tmux"
 
 # install ripgrep dependency
 echo "Installing ripgrep..."
-curl -Lo rg.tar.gz https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep-x86_64-unknown-linux-musl.tar.gz
-tar -xzf rg.tar.gz
-mv ripgrep-*/rg "$HOME/.local/bin/"
-rm -rf ripgrep-* rg.tar.gz
-chmod +x "$HOME/.local/bin/rg"
+curl -fsSL https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep-x86_64-unknown-linux-musl.tar.gz \
+    | tar -xz -C "$HOME/.local/bin" --strip-components=1 --wildcards '*/rg'
 
 # install fd dependency
-echo "Installing fd..."
-curl -Lo fd.tar.gz https://github.com/sharkdp/fd/releases/latest/download/fd-v10.2.0-x86_64-unknown-linux-musl.tar.gz
-tar -xzf fd.tar.gz
-# Use a wildcard here too
-mv fd-*/fd "$HOME/.local/bin/"
-rm -rf fd-* fd.tar.gz
-chmod +x "$HOME/.local/bin/fd"
+curl -fsSL https://github.com/sharkdp/fd/releases/latest/download/fd-v10.2.0-x86_64-unknown-linux-musl.tar.gz \
+    | tar -xz -C "$HOME/.local/bin" --strip-components=1 --wildcards '*/fd'
 
 # install tree-sitter cli dependency
-echo "Installing treesitter-cli..."
-curl -fLo "$HOME/.local/bin/tree-sitter.gz" https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz
-
-# if already unzipped
-if file "$HOME/.local/bin/tree-sitter.gz" | grep -q "gzip"; then
-    gunzip -f "$HOME/.local/bin/tree-sitter.gz"
-else
-    mv "$HOME/.local/bin/tree-sitter.gz" "$HOME/.local/bin/tree-sitter"
-fi
+# Since this is a .gz use gunzip
+curl -fsSL https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz \
+    | gunzip -c > "$HOME/.local/bin/tree-sitter"
 chmod +x "$HOME/.local/bin/tree-sitter"
 
 echo "Bootstrapping finished"
