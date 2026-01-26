@@ -30,6 +30,22 @@ if [ ! -d $BREW_HOME/bin ]; then
     mkdir -p "$BREW_HOME/bin"
 fi
 
+
+slink() {
+    local dotLocation="$DOTFILES/$1"
+    local confLocation="$HOME/$2"
+
+    ln -sf "$dotLocation" "$confLocation"
+}
+
+echo "Linking dotfiles to host..."
+
+# Links files downloaded from github to user environment config locations
+slink "bash/.bashrc.d" ".bashrc.d"
+slink "nvim" ".config/nvim"
+slink "tmux/.tmux.conf" ".tmux.conf"
+
+echo "Dotfiles linked to config dirs"
 echo "Appending source spript to .bashrc..."
 
 # add .bashrc.d to be sourced by .bashrc
@@ -44,24 +60,8 @@ unset file
 
 EOF
 
-echo "Linking dotfiles to host..."
-
 # append the script to .bashrc
 echo "$SCRIPT" >> "$HOME/.bashrc"
-
-slink() {
-    local dotLocation="$DOTFILES/$1"
-    local confLocation="$HOME/$2"
-
-    ln -sf "$dotLocation" "$confLocation"
-}
-
-# Links files downloaded from github to user environment config locations
-slink "bash/.bashrc.d" ".bashrc.d"
-slink "nvim" ".config/nvim"
-slink "tmux/.tmux.conf" ".tmux.conf"
-
-echo "Dotfiles linked to config dirs"
 
 # download brew if not already for user-space package management
 if [ ! command -v brew &>/dev/null ]; then
