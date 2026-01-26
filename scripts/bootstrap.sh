@@ -84,35 +84,33 @@ echo "$SCRIPT" >> "$HOME/.bashrc"
 # luarocks install jsregexp dependency for neovim
 # luarocks install jsregexp
 
-# install neovim with appimage for fastest download speed
-echo "Installing neovim..."
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-tar -xzf nvim-linux-x86_64.tar.gz
-mv nvim-linux-x86_64 $HOME/.local/nvim-dist
-ln -sfn $HOME/.local/nvim-dist/bin/nvim $HOME/.local/bin/nvim
-
-# install ripgrep dependency
+# install ripgrep
 echo "Installing ripgrep..."
-curl -LO https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep-14.1.0-x86_64-unknown-linux-musl.tar.gz
-tar -xzf ripgrep-14.1.0-x86_64-unknown-linux-musl.tar.gz
-mv ripgrep-14.1.0-x86_64-unknown-linux-musl/rg "$HOME/.local/bin/"
-rm -rf ripgrep-14.1.0-x86_64-unknown-linux-musl*
+curl -L -o rg.tar.gz https://github.com/BurntSushi/ripgrep/releases/latest/download/ripgrep-x86_64-unknown-linux-musl.tar.gz
+tar -xzf rg.tar.gz
+mv ripgrep-*/rg "$HOME/.local/bin/"
+rm -rf ripgrep-* rg.tar.gz
 chmod +x "$HOME/.local/bin/rg"
 
-# install fd dependency
+# install fd
 echo "Installing fd..."
-curl -LO https://github.com/sharkdp/fd/releases/latest/download/fd-v10.2.0-x86_64-unknown-linux-musl.tar.gz
-tar -xzf fd-v10.2.0-x86_64-unknown-linux-musl.tar.gz
-mv fd-v10.2.0-x86_64-unknown-linux-musl/fd "$HOME/.local/bin/"
-rm -rf fd-v10.2.0-x86_64-unknown-linux-musl*
+curl -L -o fd.tar.gz https://github.com/sharkdp/fd/releases/latest/download/fd-v10.2.0-x86_64-unknown-linux-musl.tar.gz
+tar -xzf fd.tar.gz
+mv fd-*/fd "$HOME/.local/bin/"
+rm -rf fd-* fd.tar.gz
 chmod +x "$HOME/.local/bin/fd"
 
-# install tree-sitter cli dependency
+# 3. Install tree-sitter cli
 echo "Installing treesitter-cli..."
-curl -LO https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz
-gunzip tree-sitter-linux-x64.gz
-mv tree-sitter-linux-x64 $HOME/.local/bin/tree-sitter
-chmod +x $HOME/.local/bin/tree-sitter
+curl -fLo "$HOME/.local/bin/tree-sitter.gz" https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz
+
+# if the file download is a gunzip already then just rename it
+if file "$HOME/.local/bin/tree-sitter.gz" | grep -q "gzip"; then
+    gunzip -f "$HOME/.local/bin/tree-sitter.gz"
+else
+    mv "$HOME/.local/bin/tree-sitter.gz" "$HOME/.local/bin/tree-sitter"
+fi
+chmod +x "$HOME/.local/bin/tree-sitter"
 
 echo "Packages installed"
 echo "Bootstrapping finished"
