@@ -33,14 +33,15 @@ export BREW_HOME="$HOME/.linuxbrew"
 slink() {
     local dotLocation="$DOTFILES/$1"
     local confLocation="$HOME/$2"
+
     echo "linking $dotLocation to $confLocation"
-    ln -sf "$dotLocation" "$confLocation"
+    ln -sfn "$dotLocation" "$confLocation"
 }
 
 echo "Linking dotfiles to host..."
 
 # Links files downloaded from github to user environment config locations
-slink "bash/.bashrc.d" ""
+slink "bash/.bashrc.d" ".bashrc.d"
 slink "nvim" ".config/nvim"
 slink "tmux/.tmux.conf" ".tmux.conf"
 
