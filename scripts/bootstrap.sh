@@ -85,9 +85,11 @@ echo "$SCRIPT" >> "$HOME/.bashrc"
 # luarocks install jsregexp
 
 # install neovim with appimage for fastest download speed
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+tar -xzf nvim-linux-x86_64.tar.gz
 chmod u+x nvim.appimage
-mv nvim.appimage "$HOME/.local/bin/nvim"
+mv nvim-linux-x86_64 $HOME/.local/nvim-dist
+ln -sfn $HOME/.local/nvim-dist/bin/nvim $HOME/.local/bin/nvim
 
 echo "Packages installed"
 echo "Bootstrapping finished"
