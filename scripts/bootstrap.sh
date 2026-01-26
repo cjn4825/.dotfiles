@@ -12,17 +12,10 @@ if [ ! -d $HOME/.config ]; then
     mkdir -p $HOME/.config
 fi
 
-# --- no need to create if the folder is being linked anyways
-# creates .bashrc.d if not already
-# if [ ! -d $HOME/.bashrc.d ]; then
-#     echo "Creating .bashrc.d dir..."
-#     mkdir -p $HOME/.bashrc.d
-# fi
-
-# creates .local/bin if not already
-if [ ! -d $HOME/.local/bin ]; then
-    echo "Creating .local/bin dir..."
-    mkdir -p $HOME/.local/bin
+# creates .local/bin/nvim for neovim
+if [ ! -d $HOME/.local/bin/nvim ]; then
+    echo "Creating .local/bin/nvim dir..."
+    mkdir -p $HOME/.local/bin/nvim
 fi
 
 # creates homebrew home dir if not already
@@ -76,7 +69,6 @@ echo "Downloading packages via Homebrew..."
 # removed man pages?
 
 packages=(
-    neovim
     curl
     tmux
     wget
@@ -107,6 +99,11 @@ done
 
 # luarocks install jsregexp dependency for neovim
 luarocks install jsregexp
+
+# install neovim with appimage for fastest download speed
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+chmod u+x nvim.appimage
+mv nvim.appimage "$HOME/.local/bin/nvim"
 
 echo "Packages installed"
 echo "Bootstrapping finished"
