@@ -64,14 +64,14 @@ rm nvim-linux-x86_64.tar.gz
 
 # ------------------------------------------working-----------------------------------------------
 
-# install tmux via community static binary
+# install tmux via community app image
 echo "Installing tmux..."
-curl -s https://api.github.com/repos/nelsonenzo/tmux-appimage/releases/latest \
- grep "browser_download_url.*appimage" \
- cut -d : -f 2,3 \
- tr -d \" \
- wget -qi - \
-&& chmod +x tmux.appimage
+curl https://api.github.com/repos/nelsonenzo/tmux-appimage/releases/latest \
+| grep "browser_download_url.*appimage" \
+| cut -d : -f 2,3 \
+| tr -d \" \
+| wget -qi - \
+&& chmod +x tmux.appimagee
 mv tmux.appimage ~/.local/bin/tmux
 
 # install ripgrep dependency
