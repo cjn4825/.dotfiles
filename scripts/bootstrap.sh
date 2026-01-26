@@ -2,9 +2,7 @@
 
 set -e
 
-DOTFILES="$HOME/.dotfiles"
-
-export BREW_HOME="$HOME/.linuxbrew"
+DOTFILES="$HOME/dotfiles"
 
 # creates .config if not already
 if [ ! -d $HOME/.config ]; then
@@ -30,11 +28,12 @@ if [ ! -d $BREW_HOME/bin ]; then
     mkdir -p "$BREW_HOME/bin"
 fi
 
+export BREW_HOME="$HOME/.linuxbrew"
 
 slink() {
     local dotLocation="$DOTFILES/$1"
     local confLocation="$HOME/$2"
-
+    echo "linking $dotLocation to $confLocation"
     ln -sf "$dotLocation" "$confLocation"
 }
 
