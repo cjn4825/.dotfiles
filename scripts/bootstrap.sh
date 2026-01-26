@@ -12,10 +12,10 @@ if [ ! -d $HOME/.config ]; then
     mkdir -p $HOME/.config
 fi
 
-# creates .local/bin/nvim for neovim
-if [ ! -d $HOME/.local/bin/nvim ]; then
-    echo "Creating .local/bin/nvim dir..."
-    mkdir -p $HOME/.local/bin/nvim
+# creates .local/bin for binaries
+if [ ! -d $HOME/.local/bin ]; then
+    echo "Creating .local/bin dir..."
+    mkdir -p $HOME/.local/bin
 fi
 
 # creates homebrew home dir if not already
