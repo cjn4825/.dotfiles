@@ -24,7 +24,7 @@ if [ ! -d $BREW_HOME/bin ]; then
     mkdir -p "$BREW_HOME/bin"
 fi
 
-slink() {
+dotlink() {
     local dotLocation="$DOTFILES/$1"
     local confLocation="$HOME/$2"
 
@@ -35,9 +35,9 @@ slink() {
 echo "Linking dotfiles to host..."
 
 # Links files downloaded from github to user environment config locations
-slink "bash/.bashrc.d" ".bashrc.d"
-slink "nvim" ".config/nvim"
-slink "tmux/.tmux.conf" ".tmux.conf"
+dotlink "bash/.bashrc.d" ".bashrc.d"
+dotlink "nvim" ".config/nvim"
+dotlink "tmux/.tmux.conf" ".tmux.conf"
 
 echo "Dotfiles linked to config dirs"
 echo "Appending source spript to .bashrc..."
@@ -56,19 +56,30 @@ echo "$SCRIPT" >> "$HOME/.bashrc"
 
 # ------------------------------------------working-----------------------------------------------
 
-curl -Lo eget.sh https://zyedidia.github.io/eget.sh
-bash eget.sh
-rm eget.sh
-mv eget $HOME/.local/bin/
+# install mise for user wide package management with binaries
+curl -Lo mise https://mise.jdx.dev/mise-latest-linux-x64
+chmod +x mise
+mv mise $HOME/.local/bin
 
-eget https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz \
-    --file nvim-linux-x86_64/bin/nvim \
-    --to $HOME/.local/bin
+miselink() {
+    local miseLocation="$HOME/.local/share/mise/installs/$1"
+    local binLocation="$HOME/.local/bin/$2"
 
-# eget tmux/tmux
-# eget junegunn/fzf
-# eget sharkdp/fd
-# eget BurntSushi/ripgrep
+    echo "linking $dotLocation to $confLocation"
+    ln -sfn "$dotLocation" "$confLocation"
+}
+
+mise use neovim@latest
+mise use tmux@latest
+mise use ripgrep@latest
+mise use fd@latest
+
+miselink neovim/latest/bin/nvim nvim
+miselink tmux/latest/tmux tmux
+miselink ripgrep/latest/ripgrep-*-x86_64-unknown-linux-musl/rg rg
+miselink fd/latest/fd-*-x86_64-unknown-linux-musl/fd fd
+
+##################MAKE SURE TO DELETE MISE AFTERWARDS#############################
 
 # install neovim tar
 # echo "Installing neovim..."
