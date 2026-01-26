@@ -61,21 +61,18 @@ curl -Lo mise https://mise.jdx.dev/mise-latest-linux-x64
 chmod +x mise
 mv mise $HOME/.local/bin
 
-# need to alias mise script wise to allow just "mise" in below use lines
-alias mise="$HOME/.local/bin/mise"
-
 miselink() {
     local miseLocation="$HOME/.local/share/mise/installs/$1"
     local binLocation="$HOME/.local/bin/$2"
 
-    echo "linking $dotLocation to $confLocation"
-    ln -sfn "$dotLocation" "$confLocation"
+    echo "linking $miseLocation to $binLocation"
+    ln -sfn "$miseLocation" "$binLocation"
 }
 
-mise use neovim@latest
-mise use tmux@latest
-mise use ripgrep@latest
-mise use fd@latest
+"$HOME/.local/bin/mise" use neovim@latest
+"$HOME/.local/bin/mise" use tmux@latest
+"$HOME/.local/bin/mise" use ripgrep@latest
+"$HOME/.local/bin/mise" use fd@latest
 
 miselink neovim/latest/bin/nvim nvim
 miselink tmux/latest/tmux tmux
