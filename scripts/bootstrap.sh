@@ -69,27 +69,11 @@ echo "Downloading packages via Homebrew..."
 # removed man pages?
 
 packages=(
-    curl
     tmux
-    wget
-    unzip
-    tar
-    gzip
-    gtar
-    xz
-    make
-    gcc
     shellcheck
     luarocks
-    python3
-    python3-pip
-    util-linux
-    ca-certificates
-    nodejs
     ripgrep
-    fd-find
-    man
-    man-pages
+    fd
     )
 
 for package in "${packages[@]}"; do
