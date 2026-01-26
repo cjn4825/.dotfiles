@@ -65,12 +65,13 @@ rm nvim-linux-x86_64.tar.gz
 # ------------------------------------------working-----------------------------------------------
 
 # install tmux via community static binary
+echo "Installing tmux..."
 curl -fLo "tmux.tar.gz" https://github.com/tmux/tmux-builds/releases/download/v3.6a/tmux-3.6a-linux-x86_64.tar.gz
 tar -xzf tmux.tar.gz
-mkdir -p "$HOME/.local/tmux-dist"
-mv tmux-3.6a-linux-x86_64/* "$HOME/.local/tmux-dist/"
-ln -sfn "$HOME/.local/tmux-dist/tmux" "$HOME/.local/bin/tmux"
-chmod +x "$HOME/.local/bin/tmux"
+mkdir -p $HOME/.local/tmux-dist
+mv tmux-3.6a-linux-x86_64/* $HOME/.local/tmux-dist/tmux
+ln -sfn $HOME/.local/tmux-dist/tmux $HOME/.local/bin/tmux
+chmod +x $HOME/.local/bin/tmux
 rm -rf tmux.tar.gz tmux-3.6a-linux-x86_64
 
 # install ripgrep dependency
