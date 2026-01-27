@@ -10,6 +10,7 @@ if [ ! -d $HOME/.config ]; then
     mkdir -p $HOME/.config
 fi
 
+sdfasdf
 # creates .local/bin for binaries
 if [ ! -d $HOME/.local/bin ]; then
     echo "Creating .local/bin dir..."
@@ -91,6 +92,6 @@ miselink fzf/$FZF_VERSION/fzf fzf
 # $HOME/.local/bin/gh extension install dlvhdr/gh-dash
 
 # move mise.toml to mise dir
-mv mise.toml $HOME/.local/share/mise/
+mv mise.toml "$HOME/.local/share/mise/"
 
 echo "Bootstrapping finished"
