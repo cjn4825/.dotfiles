@@ -5,16 +5,15 @@ set -e
 DOTFILES="$HOME/dotfiles"
 
 # creates .config if not already
-if [ ! -d $HOME/.config ]; then
+if [ ! -d "$HOME/.config" ]; then
     echo "Creating .config dir..."
-    mkdir -p $HOME/.config
+    mkdir -p "$HOME/.config"
 fi
 
-sdfasdf
 # creates .local/bin for binaries
-if [ ! -d $HOME/.local/bin ]; then
+if [ ! -d "$HOME/.local/bin" ]; then
     echo "Creating .local/bin dir..."
-    mkdir -p $HOME/.local/bin
+    mkdir -p "$HOME/.local/bin"
 fi
 
 # function that makes dotfiles link easier
@@ -70,7 +69,7 @@ TMUX_VERSION="3.6a"
 RIPGREP_VERSION="15.1.0"
 FD_VERSION="10.3.0"
 FZF_VERSION="0.67.0"
-# GH_VERSION="2.86.0"
+GH_VERSION="2.86.0"
 
 # installs tooling with mise
 $MISE use neovim@$NEOVIM_VERSION
@@ -78,7 +77,7 @@ $MISE use tmux@$TMUX_VERSION
 $MISE use ripgrep@$RIPGREP_VERSION
 $MISE use fd@$FD_VERSION
 $MISE use fzf@$FZF_VERSION
-# $MISE use gh@$GH_VERSION
+$MISE use gh@$GH_VERSION
 
 # uses miselink to link mise tools to bin
 miselink neovim/$NEOVIM_VERSION/bin/nvim nvim
@@ -86,10 +85,10 @@ miselink tmux/$TMUX_VERSION/tmux tmux
 miselink ripgrep/$RIPGREP_VERSION/ripgrep-$RIPGREP_VERSION-x86_64-unknown-linux-musl/rg rg
 miselink fd/$FD_VERSION/fd-v$FD_VERSION-x86_64-unknown-linux-musl/fd fd
 miselink fzf/$FZF_VERSION/fzf fzf
-# miselink gh/$GH_VERSION/gh_$GH_VERSION\_linux_amd64/bin/gh gh
+miselink gh/$GH_VERSION/gh_$GH_VERSION\_linux_amd64/bin/gh gh
 
-# installs gh-dash for terminal github integration (for now assumes json file includes gh)
-# $HOME/.local/bin/gh extension install dlvhdr/gh-dash
+# installs gh-dash for terminal github integration (should check if it already exists first...)
+"$HOME/.local/bin/gh" extension install dlvhdr/gh-dash
 
 # move mise.toml to mise dir
 mv mise.toml "$HOME/.local/share/mise/"
