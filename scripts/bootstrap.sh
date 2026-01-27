@@ -88,7 +88,7 @@ miselink fzf/$FZF_VERSION/fzf fzf
 # miselink gh/$GH_VERSION/gh_$GH_VERSION\_linux_amd64/bin/gh gh
 
 # installs gh-dash for terminal github integration (for now assumes json file includes gh)
-$HOME/.local/bin/gh extension install dlvhdr/gh-dash
+# $HOME/.local/bin/gh extension install dlvhdr/gh-dash
 
 # move mise.toml to mise dir
 mv mise.toml $HOME/.local/share/mise/
