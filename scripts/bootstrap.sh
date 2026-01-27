@@ -85,7 +85,7 @@ miselink tmux/$TMUX_VERSION/tmux tmux
 miselink ripgrep/$RIPGREP_VERSION/ripgrep-$RIPGREP_VERSION-x86_64-unknown-linux-musl/rg rg
 miselink fd/$FD_VERSION/fd-v$FD_VERSION-x86_64-unknown-linux-musl/fd fd
 miselink fzf/$FZF_VERSION/fzf fzf
-miselink gh/$GH_VERSION/gh_{$GH_VERSION}_linux_amd64/bin/gh gh
+miselink gh/$GH_VERSION/gh_$GH_VERSION\_linux_amd64/bin/gh gh
 
 # installs gh-dash for terminal github integration
 $HOME/.local/bin/gh extension install dlvhdr/gh-dash
