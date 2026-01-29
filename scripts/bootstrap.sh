@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 set -e
 
 DOTFILES="$HOME/dotfiles"
@@ -36,30 +35,37 @@ echo "Dotfiles linked to config dirs"
 echo "Appending source spript to .bashrc..."
 
 # add .bashrc.d to be sourced by .bashrc
-SCRIPT='
+SCRIPT="
 # --- start of dotfiles config link ---
-for file in "$HOME/.bashrc.d"/*; do
-    [ -r "$file" ] && . "$file"
+for file in '$HOME/.bashrc.d'/*; do
+    [ -r $file ] && . $file
 done
 unset file
 # --- end of dotfile config link ---
-'
+"
+
 # append the script to .bashrc
 echo "$SCRIPT" >> "$HOME/.bashrc"
 
 # install mise for user wide package management with binaries
-curl -Lo mise https://mise.jdx.dev/mise-latest-linux-x64
-chmod +x mise
-mv mise "$HOME/.local/bin"
+# curl -Lo mise --output-dir "$HOME/.local/bin/" "https://mise.jdx.dev/mise-latest-linux-x64"
 
-# function that makes mise link to .local/bin easier
-miselink() {
-    local miseLocation="$HOME/.local/share/mise/installs/$1"
-    local binLocation="$HOME/.local/bin/$2"
+# gives the user executible permissions for mise
+# chmod +x "$HOME/.local/bin/mise"
 
-    echo "linking $miseLocation to $binLocation"
-    ln -sfn "$miseLocation" "$binLocation"
-}
+# uses mise to add its downloaded tools to $PATH
+# ACTIVATE="
+# # --- activate mise to allow its tools to be in PATH
+
+# eval '$HOME/.local/bin/mise activate bash'
+
+# # --- end of activation
+# "
+
+# append activate to .bashrc
+# echo "$ACTIVATE" >> "$HOME/.bashrc"
+
+#############ASSUMES THE PROJECT HAS MISE INSTALLED#########
 
 MISE="$HOME/.local/bin/mise"
 
@@ -78,19 +84,5 @@ $MISE use ripgrep@$RIPGREP_VERSION
 $MISE use fd@$FD_VERSION
 $MISE use fzf@$FZF_VERSION
 $MISE use gh@$GH_VERSION
-
-# uses miselink to link mise tools to bin
-miselink neovim/$NEOVIM_VERSION/bin/nvim nvim
-miselink tmux/$TMUX_VERSION/tmux tmux
-miselink ripgrep/$RIPGREP_VERSION/ripgrep-$RIPGREP_VERSION-x86_64-unknown-linux-musl/rg rg
-miselink fd/$FD_VERSION/fd-v$FD_VERSION-x86_64-unknown-linux-musl/fd fd
-miselink fzf/$FZF_VERSION/fzf fzf
-miselink gh/$GH_VERSION/gh_$GH_VERSION\_linux_amd64/bin/gh gh
-
-# installs gh-dash for terminal github integration (should check if it already exists first...)
-"$HOME/.local/bin/gh" extension install dlvhdr/gh-dash
-
-# move mise.toml to mise dir
-mv mise.toml "$HOME/.local/share/mise/"
 
 echo "Bootstrapping finished"

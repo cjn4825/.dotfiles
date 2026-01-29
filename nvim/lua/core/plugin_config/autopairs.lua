@@ -1,5 +1,5 @@
 return {
-    'jiangmiao/auto-pairs',
-    event = "InsertEnter",
-    desc = "autopairs for delimeters such as {} [] ect"
+	"jiangmiao/auto-pairs",
+	event = "InsertEnter",
+	desc = "autopairs for delimeters such as {} [] ect",
 }
