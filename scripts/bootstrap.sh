@@ -38,7 +38,7 @@ echo "Appending source spript to .bashrc..."
 SCRIPT="
 # --- start of dotfiles config link ---
 for file in '$HOME/.bashrc.d'/*; do
-    [ -r $file ] && . $file
+    [ -r $(file) ] && . $(file)
 done
 unset file
 # --- end of dotfile config link ---
