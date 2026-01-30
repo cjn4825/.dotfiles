@@ -37,9 +37,11 @@ echo "Appending source spript to .bashrc..."
 # add .bashrc.d to be sourced by .bashrc
 SCRIPT="
 # --- start of dotfiles config link ---
-for file in '$HOME/.bashrc.d'/*; do
-    [ -r $(file) ] && . $(file)
-done
+if [ -d \"\$HOME/.bashrc.d\" ]; then
+    for file in \"\$HOME/.bashrc.d/\"*; do
+        [ -r \"\$file\" ] && . \"\$file\"
+    done
+fi
 unset file
 # --- end of dotfile config link ---
 "
