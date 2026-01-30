@@ -79,12 +79,12 @@ FD_VERSION="10.3.0"
 FZF_VERSION="0.67.0"
 GH_VERSION="2.86.0"
 
-# installs tooling with mise
-$MISE use neovim@$NEOVIM_VERSION
-$MISE use tmux@$TMUX_VERSION
-$MISE use ripgrep@$RIPGREP_VERSION
-$MISE use fd@$FD_VERSION
-$MISE use fzf@$FZF_VERSION
-$MISE use gh@$GH_VERSION
+# installs tooling with mise in path dir
+$MISE use -g neovim@$NEOVIM_VERSION
+$MISE use -g tmux@$TMUX_VERSION
+$MISE use -g ripgrep@$RIPGREP_VERSION
+$MISE use -g fd@$FD_VERSION
+$MISE use -g fzf@$FZF_VERSION
+$MISE use -g gh@$GH_VERSION
 
 echo "Bootstrapping finished"
