@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# simple wrapper that runs devpod without needing to remember syntax
+
+set -e
+
+devpod up . --provider docker --dotfiles https://github.com/cjn4825/.dotfiles.git --dotfiles-script scripts/bootstrap.sh --ide none

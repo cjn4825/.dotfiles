@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+
+### this script is ONLY for Bootstrapping dev container environments
+### that are using a standard devcontainer.json file and with some
+### tool like devpod
+
 set -e
 
 DOTFILES="$HOME/dotfiles"
@@ -68,6 +73,7 @@ echo "$SCRIPT" >> "$HOME/.bashrc"
 # echo "$ACTIVATE" >> "$HOME/.bashrc"
 
 #############ASSUMES THE PROJECT HAS MISE INSTALLED#########
+# not good i know but for now this is how it is
 
 MISE="$HOME/.local/bin/mise"
 
