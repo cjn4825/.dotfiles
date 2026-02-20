@@ -46,10 +46,9 @@ return {
 						single_file_support = true,
 					})
 				end,
-                -- go through old commits to see why the global vim thing still happens
+
 				["lua_ls"] = function()
 					require("lspconfig").lua_ls.setup({
-						capabilities = capabilities,
 						settings = {
 							Lua = {
 								diagnostics = { globals = { "vim" } },
@@ -60,7 +59,6 @@ return {
 
 				["ansiblels"] = function()
 					require("lspconfig").ansiblels.setup({
-						capabilities = capabilities,
 						filetypes = { "ansible", "yaml.ansible" },
 						settings = {
 							ansible = {
@@ -74,14 +72,11 @@ return {
 				end,
 
 				["terraformls"] = function()
-					require("lspconfig").terraformls.setup({
-						capabilities = capabilities,
-					})
+					require("lspconfig").terraformls.setup({})
 				end,
 
 				["bashls"] = function()
 					require("lspconfig").bashls.setup({
-						capabilities = capabilities,
 						filetypes = { "sh", "bash" },
 						root_dir = require("lspconfig.util").find_git_ancestor() or vim.loop.cwd(),
 					})
@@ -89,7 +84,6 @@ return {
 
 				["jsonls"] = function()
 					require("lspconfig").jsonls.setup({
-						capabilities = capabilities,
 						settings = {
 							json = {
 								schemas = require("schemastore").json.schemas(),
@@ -101,7 +95,6 @@ return {
 
 				["yamlls"] = function()
 					require("lspconfig").yamlls.setup({
-						capabilities = capabilities,
 						filetypes = { "yaml", "yaml.github", "yaml.docker-compose" },
 						settings = {
 							yaml = {
@@ -121,35 +114,15 @@ return {
 				end,
 			}
 
+            local tools = require("core.tools")
+
 			require("mason-lspconfig").setup({
-				ensure_installed = {
-					"lua_ls",
-					"dockerls",
-					"yamlls",
-					"bashls",
-					"jsonls",
-					"pyright",
-					"ansiblels",
-					"terraformls",
-				},
-				handlers = handlers,
+				ensure_installed = tools.lsp_to_install,
+				handlers = handlers
 			})
-            -- ansible lint not found?
+
 			require("mason-tool-installer").setup({
-				ensure_installed = {
-					"shellcheck",
-					"hadolint",
-					"jsonlint",
-					"yamllint",
-					"tflint",
-					"ansible-lint",
-					"actionlint",
-					"bandit",
-					"selene",
-					"beautysh",
-					"black",
-					"stylua",
-				},
+				ensure_installed = tools.all_tools
 			})
 
 			vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
