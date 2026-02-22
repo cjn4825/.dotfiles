@@ -7,6 +7,8 @@
 set -e
 
 DOTFILES="$HOME/dotfiles"
+USERBIN="$HOME/.local/bin"
+MISEBIN="$USERBIN/mise"
 
 # creates .config if not already
 if [ ! -d "$HOME/.config" ]; then
@@ -39,7 +41,7 @@ dotlink "tmux/.tmux.conf" ".tmux.conf"
 echo "Dotfiles linked to config dirs"
 echo "Appending source spript to .bashrc..."
 
-# add .bashrc.d to be sourced by .bashrc
+# add .bashrc.d to be sourced by .bashrc and tmux logic
 SCRIPT="
 # --- start of dotfiles config link ---
 if [ -d \"\$HOME/.bashrc.d\" ]; then
@@ -48,34 +50,48 @@ if [ -d \"\$HOME/.bashrc.d\" ]; then
     done
 fi
 unset file
+
+# only run in interactive shells
+if [ -n \"\$PS1\" ]; then
+    # check if we are already in tmux session
+    if [ -z \"\$TMUX\" ] && command -v tmux >/dev/null 2>&1; then
+
+        # wait a little for DevPod to finish its 'inject' scripts
+        sleep 0.5
+
+        # attempt to attach or create session '0'
+        tmux a -t 0 >/dev/null || tmux new-session -s 0
+
+        # exit the shell immediately and silently
+        exit 0
+    fi
+fi
+
 # --- end of dotfile config link ---
 "
 
 # append the script to .bashrc
 echo "$SCRIPT" >> "$HOME/.bashrc"
 
-# install mise for user wide package management with binaries
-# curl -Lo mise --output-dir "$HOME/.local/bin/" "https://mise.jdx.dev/mise-latest-linux-x64"
+# download mise if not already on the system
+if [ ! -f "$MISEBIN" ]; then
+    curl -Lo "$MISEBIN" "https://mise.jdx.dev/mise-latest-linux-x64" 2>&1
+    chmod +x "$MISEBIN"
+fi
 
-# gives the user executible permissions for mise
-# chmod +x "$HOME/.local/bin/mise"
+ACTIVATE="
+#--- activate mise to allow its tools to be in PATH
 
-# uses mise to add its downloaded tools to $PATH
-# ACTIVATE="
-# # --- activate mise to allow its tools to be in PATH
+eval \"$(\$HOME/.local/bin/mise activate bash)\"
 
-# eval '$HOME/.local/bin/mise activate bash'
+#--- end of mise activation
+"
 
-# # --- end of activation
-# "
-
-# append activate to .bashrc
-# echo "$ACTIVATE" >> "$HOME/.bashrc"
-
-#############ASSUMES THE PROJECT HAS MISE INSTALLED#########
-# not good i know but for now this is how it is
-
-MISE="$HOME/.local/bin/mise"
+# if mise isn't activated yet then add to .bashrc
+# uses made up code to determine it
+if ! grep -q "MISE:146325" "$HOME/.bashrc"; then
+    echo "$ACTIVATE" >> "$HOME/.bashrc"
+fi
 
 # sets specific versions to use
 NEOVIM_VERSION="0.11.6"
@@ -86,11 +102,11 @@ FZF_VERSION="0.67.0"
 GH_VERSION="2.86.0"
 
 # installs tooling with mise in path dir
-$MISE use -g neovim@$NEOVIM_VERSION
-$MISE use -g tmux@$TMUX_VERSION
-$MISE use -g ripgrep@$RIPGREP_VERSION
-$MISE use -g fd@$FD_VERSION
-$MISE use -g fzf@$FZF_VERSION
-$MISE use -g gh@$GH_VERSION
+$MISEBIN use -g neovim@$NEOVIM_VERSION
+$MISEBIN use -g tmux@$TMUX_VERSION
+$MISEBIN use -g ripgrep@$RIPGREP_VERSION
+$MISEBIN use -g fd@$FD_VERSION
+$MISEBIN use -g fzf@$FZF_VERSION
+$MISEBIN use -g gh@$GH_VERSION
 
 echo "Bootstrapping finished"
