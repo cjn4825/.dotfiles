@@ -50,7 +50,7 @@ fi
 ACTIVATE="
 #--- activate mise to allow its tools to be in PATH
 
-eval \"$(\$HOME/.local/bin/mise activate bash)\"
+eval \"\$(\$HOME/.local/bin/mise activate bash)\"
 
 #--- end of mise activation
 "
