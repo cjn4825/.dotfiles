@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# simple wrapper that runs devpod ssh without error messages
+
+set -e
+
+devpod ssh --silent
