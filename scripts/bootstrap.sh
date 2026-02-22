@@ -77,7 +77,6 @@ $MISEBIN use -g fd@$FD_VERSION
 $MISEBIN use -g fzf@$FZF_VERSION
 $MISEBIN use -g gh@$GH_VERSION
 
-# add .bashrc.d to be sourced by .bashrc and tmux logic
 SCRIPT="
 # --- start of dotfiles config link ---
 if [ -d \"\$HOME/.bashrc.d\" ]; then
@@ -88,12 +87,9 @@ fi
 unset file
 
 # only run in interactive shells
-if [ -n \"\$PS1\" ]; then
+if [[ \$- == *i* ]]; then
     # check if we are already in tmux session
-    if [ -z \"\$TMUX\" ] && command -v tmux >/dev/null 2>&1; then
-
-        # wait a little for DevPod to finish its 'inject' scripts
-        sleep 0.5
+    if command -v tmux >/dev/null 2>&1 && [ -z \"\$TMUX\" ]; then
 
         # attempt to attach or create session '0'
         exec tmux a -t 0 >/dev/null || exec tmux new-session -s 0
