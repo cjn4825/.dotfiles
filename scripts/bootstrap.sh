@@ -98,7 +98,8 @@ if [[ \$- == *i* ]]; then
         # attempt to attach or create session '0'
         tmux a -t 0 >/dev/null || tmux new-session -s 0
 
-        exit 0
+        # logout so devpod can exit safer
+        logout
 
     fi
 fi
