@@ -92,14 +92,9 @@ if [[ \$- == *i* ]]; then
     # check if we are already in tmux session
     if command -v tmux >/dev/null 2>&1 && [ -z \"\$TMUX\" ]; then
 
-        # attempt to attach or create session '0'
-        #tmux a -t 0 >/dev/null 2>&1 || tmux new-session -s 0 >/dev/null 2>&1
-
         # attach if the session exists otherwise create one
         tmux a -t 0 >/dev/null 2>&1 || tmux new-session -s 0 >/dev/null 2>&1
 
-        reset
-        disown -a
         exit 0
     fi
 fi
