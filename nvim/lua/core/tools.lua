@@ -3,7 +3,7 @@ local M = {}
 local function get_tools()
     local lsps = { "lua_ls" }
     local linters = { "selene" }
-    local formatters = { "luaformatter" }
+    local formatters = { } -- luaformatter is builtin to lua_ls
 
     local function add_if_exist(binary, list, items)
         if vim.fn.executable(binary) == 1 then
@@ -17,7 +17,7 @@ local function get_tools()
     add_if_exist("ansible", lsps, { "ansiblels" })
     add_if_exist("sh", lsps, { "bashls", "dockerls" })
     add_if_exist("terraform", lsps, { "terraformls" })
-    add_if_exist("node", lsps, { "jsonls", "eslint-lsp" })
+    add_if_exist("node", lsps, { "jsonls", "eslint" })
     add_if_exist("go", lsps, { "gopls" })
 
     add_if_exist("python3", linters, { "bandit", "yamllint" })
