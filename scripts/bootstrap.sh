@@ -41,38 +41,6 @@ dotlink "tmux/.tmux.conf" ".tmux.conf"
 echo "Dotfiles linked to config dirs"
 echo "Appending source spript to .bashrc..."
 
-# add .bashrc.d to be sourced by .bashrc and tmux logic
-SCRIPT="
-# --- start of dotfiles config link ---
-if [ -d \"\$HOME/.bashrc.d\" ]; then
-    for file in \"\$HOME/.bashrc.d/\"*; do
-        [ -r \"\$file\" ] && . \"\$file\"
-    done
-fi
-unset file
-
-# only run in interactive shells
-if [ -n \"\$PS1\" ]; then
-    # check if we are already in tmux session
-    if [ -z \"\$TMUX\" ] && command -v tmux >/dev/null 2>&1; then
-
-        # wait a little for DevPod to finish its 'inject' scripts
-        sleep 0.5
-
-        # attempt to attach or create session '0'
-        tmux a -t 0 >/dev/null || tmux new-session -s 0
-
-        # exit the shell immediately and silently
-        exit 0
-    fi
-fi
-
-# --- end of dotfile config link ---
-"
-
-# append the script to .bashrc
-echo "$SCRIPT" >> "$HOME/.bashrc"
-
 # download mise if not already on the system
 if [ ! -f "$MISEBIN" ]; then
     curl -Lo "$MISEBIN" "https://mise.jdx.dev/mise-latest-linux-x64" 2>&1
@@ -108,5 +76,35 @@ $MISEBIN use -g ripgrep@$RIPGREP_VERSION
 $MISEBIN use -g fd@$FD_VERSION
 $MISEBIN use -g fzf@$FZF_VERSION
 $MISEBIN use -g gh@$GH_VERSION
+
+# add .bashrc.d to be sourced by .bashrc and tmux logic
+SCRIPT="
+# --- start of dotfiles config link ---
+if [ -d \"\$HOME/.bashrc.d\" ]; then
+    for file in \"\$HOME/.bashrc.d/\"*; do
+        [ -r \"\$file\" ] && . \"\$file\"
+    done
+fi
+unset file
+
+# only run in interactive shells
+if [ -n \"\$PS1\" ]; then
+    # check if we are already in tmux session
+    if [ -z \"\$TMUX\" ] && command -v tmux >/dev/null 2>&1; then
+
+        # wait a little for DevPod to finish its 'inject' scripts
+        sleep 0.5
+
+        # attempt to attach or create session '0'
+        exec tmux a -t 0 >/dev/null || exec tmux new-session -s 0
+
+    fi
+fi
+
+# --- end of dotfile config link ---
+"
+
+# append the script to .bashrc
+echo "$SCRIPT" >> "$HOME/.bashrc"
 
 echo "Bootstrapping finished"
