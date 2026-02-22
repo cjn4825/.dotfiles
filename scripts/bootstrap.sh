@@ -67,7 +67,7 @@ TMUX_VERSION="3.6a"
 RIPGREP_VERSION="15.1.0"
 FD_VERSION="10.3.0"
 FZF_VERSION="0.67.0"
-GH_VERSION="2.86.0"
+# GH_VERSION="2.86.0"
 
 # installs tooling with mise in path dir
 $MISEBIN use -g neovim@$NEOVIM_VERSION
@@ -75,7 +75,7 @@ $MISEBIN use -g tmux@$TMUX_VERSION
 $MISEBIN use -g ripgrep@$RIPGREP_VERSION
 $MISEBIN use -g fd@$FD_VERSION
 $MISEBIN use -g fzf@$FZF_VERSION
-$MISEBIN use -g gh@$GH_VERSION
+# $MISEBIN use -g gh@$GH_VERSION
 
 SCRIPT="
 # --- start of dotfiles config link ---
