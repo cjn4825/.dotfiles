@@ -88,12 +88,17 @@ unset file
 
 # only run in interactive shells
 if [[ \$- == *i* ]]; then
+
     # check if we are already in tmux session
     if command -v tmux >/dev/null 2>&1 && [ -z \"\$TMUX\" ]; then
+
         # sleep a second for devpod to inject scripts in time
-        sleep 1
+        sleep 0.5
+
         # attempt to attach or create session '0'
-        exec tmux a -t 0 >/dev/null || exec tmux new-session -s 0
+        tmux a -t 0 >/dev/null || tmux new-session -s 0
+
+        exit 0
 
     fi
 fi
