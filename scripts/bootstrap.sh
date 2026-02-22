@@ -92,14 +92,17 @@ if [[ \$- == *i* ]]; then
     # check if we are already in tmux session
     if command -v tmux >/dev/null 2>&1 && [ -z \"\$TMUX\" ]; then
 
-        # sleep a second for devpod to inject scripts in time
-        sleep 0.5
+        # sleep a little for devpod to inject scripts in time
+        # sleep 0.3
 
         # attempt to attach or create session '0'
-        tmux a -t 0 >/dev/null || tmux new-session -s 0
+        #tmux a -t 0 >/dev/null 2>&1 || tmux new-session -s 0 >/dev/null 2>&1
 
         # logout so devpod can exit safer
-        logout
+        #logout
+
+        # test using exec again
+        exec tmux a -t 0 >/dev/null 2>&1 || exec tmux new-session -s 0 >/dev/null 2>&1
 
     fi
 fi
