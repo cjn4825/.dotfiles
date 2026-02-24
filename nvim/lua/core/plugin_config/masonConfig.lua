@@ -69,9 +69,9 @@ return {
             })
 
             vim.lsp.config("bashls", {
+                single_file_support = true,
                 capabilities = capabilities,
                 filetypes = { "sh", "bash" },
-                root_dir = require("lspconfig.util").find_git_ancestor() or vim.loop.cwd(),
             })
 
             vim.lsp.config("jsonls", {
@@ -90,12 +90,7 @@ return {
                 settings = {
                     yaml = {
                         schemaStore = { enable = false, url = "" },
-                        schemas = require("schemastore").yaml.schemas({
-                            -- select = {
-                            --     "GitHub Workflow",
-                            --     "GitHub Actions",
-                            -- },
-                        }),
+                        schemas = require("schemastore").yaml.schemas({}),
                         validate = true,
                         completion = true,
                         hover = true,
@@ -114,26 +109,6 @@ return {
 			require("mason-tool-installer").setup({
 				ensure_installed = tools.all_tools
 			})
-
-			-- vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-			-- 	pattern = {
-			-- 		"*/tasks/*.{yml,yaml}",
-			-- 		"*/roles/*.{yml,yaml}",
-			-- 		"site.{yml,yaml}",
-			-- 		"playbook.{yml,yaml}",
-			-- 		"main.{yml,yaml}",
-			-- 	},
-			-- 	callback = function()
-			-- 		vim.bo.filetype = "yaml.ansible"
-			-- 	end,
-			-- })
-
-			-- vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-			-- 	pattern = { "*/.github/workflows/*.{yml,yaml}" },
-			-- 	callback = function()
-			-- 		vim.bo.filetype = "yaml.github"
-			-- 	end,
-			-- })
 
 			vim.api.nvim_create_autocmd("LspAttach", {
 				callback = function(event)

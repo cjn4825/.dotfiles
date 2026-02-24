@@ -13,7 +13,11 @@ return {
 				"<leader>f",
 				function()
 					require("telescope.builtin").find_files({
-						cwd = vim.fn.expand("~"),
+                        searchdirs = {
+                        vim.loop.cwd(),
+                            "/workspaces",
+                            "~"
+                        }
 					})
 				end,
 				desc = "Find files from home",
@@ -22,7 +26,11 @@ return {
 				"<leader>g",
 				function()
 					require("telescope.builtin").live_grep({
-						cwd = vim.fn.expand("~"),
+                        searchdirs = {
+                        vim.loop.cwd(),
+                            "/workspaces",
+                            "~"
+                        }
 					})
 				end,
 				desc = "Grep files from home",
