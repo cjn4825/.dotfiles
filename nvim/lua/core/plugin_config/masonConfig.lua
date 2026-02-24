@@ -9,20 +9,6 @@ return {
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 		},
 		config = function()
-			local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
-			vim.env.PATH = mason_bin .. ":" .. vim.env.PATH
-
-			local function apply_ui_fixes()
-				local bordercolor = "#ebdbb2"
-				vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none", fg = bordercolor })
-				vim.api.nvim_set_hl(0, "CmpBorder", { fg = bordercolor })
-				vim.api.nvim_set_hl(0, "NormalFloat", { link = "Normal" })
-				vim.api.nvim_set_hl(0, "CmpPmenu", { link = "Normal" })
-				vim.api.nvim_set_hl(0, "DiagnosticError", { fg = "#fb4934" })
-				vim.api.nvim_set_hl(0, "DiagnosticWarn", { fg = "#fabd2f" })
-				vim.api.nvim_set_hl(0, "DiagnosticInfo", { fg = "#83a598" })
-				vim.api.nvim_set_hl(0, "DiagnosticHint", { fg = "#8ec07c" })
-			end
 
 			vim.diagnostic.config({
 				virtual_text = { prefix = "●" },
@@ -33,117 +19,121 @@ return {
 				float = { border = "rounded" },
 			})
 
-			apply_ui_fixes()
+            local bordercolor = "#ebdbb2"
+
+            vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none", fg = bordercolor })
+            vim.api.nvim_set_hl(0, "CmpBorder", { fg = bordercolor })
+            vim.api.nvim_set_hl(0, "NormalFloat", { link = "Normal" })
+            vim.api.nvim_set_hl(0, "CmpPmenu", { link = "Normal" })
+            vim.api.nvim_set_hl(0, "DiagnosticError", { fg = "#fb4934" })
+            vim.api.nvim_set_hl(0, "DiagnosticWarn", { fg = "#fabd2f" })
+            vim.api.nvim_set_hl(0, "DiagnosticInfo", { fg = "#83a598" })
+            vim.api.nvim_set_hl(0, "DiagnosticHint", { fg = "#8ec07c" })
 
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+            vim.lsp.config("lua_ls", {
+                capabilities = capabilities,
+                settings = {
+                    Lua = {
+                        diagnostics = {
+                            globals = { 'vim' },
+                        },
+                    },
+                },
+            })
+
+            vim.lsp.config("ansiblels", {
+                capabilities = capabilities,
+                filetypes = { "ansible", "yaml.ansible" },
+                settings = {
+                    ansible = {
+                        validation = {
+                            enabled = true,
+                            lint = { enabled = true, path = "ansible-lint" },
+                        },
+                    },
+                },
+            })
+
+            vim.lsp.config("terraformls",{
+                capabilities = capabilities,
+            })
+
+            vim.lsp.config("pyright",{
+                capabilities = capabilities,
+            })
+
+            vim.lsp.config("gopls",{
+                capabilities = capabilities,
+            })
+
+            vim.lsp.config("bashls", {
+                capabilities = capabilities,
+                filetypes = { "sh", "bash" },
+                root_dir = require("lspconfig.util").find_git_ancestor() or vim.loop.cwd(),
+            })
+
+            vim.lsp.config("jsonls", {
+                capabilities = capabilities,
+                settings = {
+                    json = {
+                        schemas = require("schemastore").json.schemas(),
+                        validate = { enable = true },
+                    },
+                },
+            })
+
+            vim.lsp.config("yamlls", {
+                capabilities = capabilities,
+                filetypes = { "yaml", "yaml.github", "yaml.docker-compose" },
+                settings = {
+                    yaml = {
+                        schemaStore = { enable = false, url = "" },
+                        schemas = require("schemastore").yaml.schemas({
+                            -- select = {
+                            --     "GitHub Workflow",
+                            --     "GitHub Actions",
+                            -- },
+                        }),
+                        validate = true,
+                        completion = true,
+                        hover = true,
+                    },
+                },
+            })
+
 			require("mason").setup()
-
-			local handlers = {
-				function(server_name)
-					require("lspconfig")[server_name].setup({
-						capabilities = capabilities,
-						single_file_support = true,
-					})
-				end,
-
-				["lua_ls"] = function()
-					require("lspconfig").lua_ls.setup({
-						settings = {
-							Lua = {
-								diagnostics = { globals = { "vim" } },
-							},
-						},
-					})
-				end,
-
-				["ansiblels"] = function()
-					require("lspconfig").ansiblels.setup({
-						filetypes = { "ansible", "yaml.ansible" },
-						settings = {
-							ansible = {
-								validation = {
-									enabled = true,
-									lint = { enabled = true, path = "ansible-lint" },
-								},
-							},
-						},
-					})
-				end,
-
-				["terraformls"] = function()
-					require("lspconfig").terraformls.setup({})
-				end,
-
-				["bashls"] = function()
-					require("lspconfig").bashls.setup({
-						filetypes = { "sh", "bash" },
-						root_dir = require("lspconfig.util").find_git_ancestor() or vim.loop.cwd(),
-					})
-				end,
-
-				["jsonls"] = function()
-					require("lspconfig").jsonls.setup({
-						settings = {
-							json = {
-								schemas = require("schemastore").json.schemas(),
-								validate = { enable = true },
-							},
-						},
-					})
-				end,
-
-				["yamlls"] = function()
-					require("lspconfig").yamlls.setup({
-						filetypes = { "yaml", "yaml.github", "yaml.docker-compose" },
-						settings = {
-							yaml = {
-								schemaStore = { enable = false, url = "" },
-								schemas = require("schemastore").yaml.schemas({
-									select = {
-										"GitHub Workflow",
-										"GitHub Actions",
-									},
-								}),
-								validate = true,
-								completion = true,
-								hover = true,
-							},
-						},
-					})
-				end,
-			}
 
             local tools = require("core.tools")
 
 			require("mason-lspconfig").setup({
 				ensure_installed = tools.lsp_to_install,
-				handlers = handlers
 			})
 
 			require("mason-tool-installer").setup({
 				ensure_installed = tools.all_tools
 			})
 
-			vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-				pattern = {
-					"*/tasks/*.{yml,yaml}",
-					"*/roles/*.{yml,yaml}",
-					"site.{yml,yaml}",
-					"playbook.{yml,yaml}",
-					"main.{yml,yaml}",
-				},
-				callback = function()
-					vim.bo.filetype = "yaml.ansible"
-				end,
-			})
+			-- vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+			-- 	pattern = {
+			-- 		"*/tasks/*.{yml,yaml}",
+			-- 		"*/roles/*.{yml,yaml}",
+			-- 		"site.{yml,yaml}",
+			-- 		"playbook.{yml,yaml}",
+			-- 		"main.{yml,yaml}",
+			-- 	},
+			-- 	callback = function()
+			-- 		vim.bo.filetype = "yaml.ansible"
+			-- 	end,
+			-- })
 
-			vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-				pattern = { "*/.github/workflows/*.{yml,yaml}" },
-				callback = function()
-					vim.bo.filetype = "yaml.github"
-				end,
-			})
+			-- vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+			-- 	pattern = { "*/.github/workflows/*.{yml,yaml}" },
+			-- 	callback = function()
+			-- 		vim.bo.filetype = "yaml.github"
+			-- 	end,
+			-- })
 
 			vim.api.nvim_create_autocmd("LspAttach", {
 				callback = function(event)
