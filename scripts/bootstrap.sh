@@ -10,7 +10,7 @@ set -e
 CHANGED=false
 
 # check if not container to set dotfiles dir
-if [ ! -f "/.dockerenv" ]; then
+if [ ! -d "/workspaces" ]; then
     DOTFILES="$HOME/dotfiles"
 else
     DOTFILES="$HOME/.dotfiles"
@@ -80,13 +80,13 @@ fi
 
 MISEPATH="
 #--- sets mise tool shims to be in path
-export PATH=\$PATH:\"\$HOME/.local/share/mise/shims\"
+export PATH=\"\$PATH:\$HOME/.local/share/mise/shims\"
 #--- end of mise shims config
 "
 
 # only do anything with mise if the project is inside a container
 # and if the env var is not set yet
-if [ ! -f "/.dockerenv" ]; then
+if [ ! -d "/workspaces" ]; then
     if ! grep -q "mise tool shims" "$HOME/.bashrc"; then
         CHANGED=true
         echo "Adding mise tools to PATH"
@@ -158,7 +158,7 @@ fi
 "
 
 # check if host is a container
-if [ -f "/.dockerenv" ] && ! grep -q "start of devcontainer tmux config"; then
+if [ -d "/workspaces" ] && ! grep -q "start of devcontainer tmux config" "$HOME/.bashrc"; then
     CHANGED=true
     echo "Adding tmux sesssion auto attach to .bashrc..."
     echo "$TMUX" >> "$HOME/.bashrc"
@@ -170,3 +170,5 @@ if [ "$CHANGED" = true ]; then
 else
     echo "System is already bootstrapped"
 fi
+
+exec bash
