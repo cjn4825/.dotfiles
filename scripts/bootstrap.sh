@@ -10,7 +10,7 @@ set -e
 CHANGED=false
 
 # check if not container to set dotfiles dir
-if [ ! -d "/workspaces" ]; then
+if [ -d "/workspaces" ]; then
     DOTFILES="$HOME/dotfiles"
 else
     DOTFILES="$HOME/.dotfiles"
@@ -56,6 +56,8 @@ dotlink() {
 dotlink "bash/.bashrc.d/prompt.sh" ".bashrc.d/prompt.sh"
 dotlink "nvim" ".config/nvim"
 dotlink "tmux/.tmux.conf" ".tmux.conf"
+dotlink "bin/devup" ".local/bin/devup"
+dotlink "bin/devssh" ".local/bin/devssh"
 
 USERPATH="
 #--- sets user path to .local/bin
