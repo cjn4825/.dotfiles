@@ -18,6 +18,7 @@ local function get_tools()
     add_if_exist("terraform", lsps, { "terraformls" })
     add_if_exist("node", lsps, { "jsonls", "eslint" , "bashls", "dockerls"})
     add_if_exist("go", lsps, { "gopls" })
+    add_if_exist("gcc", lsps, { "clangd" })
 
     add_if_exist("python3", linters, { "bandit", "yamllint" })
     add_if_exist("ansible", linters, { "ansible-lint" })
@@ -25,11 +26,13 @@ local function get_tools()
     add_if_exist("terraform", linters, { "tflint" })
     add_if_exist("node", linters, { "jsonlint", "eslint_d" })
     add_if_exist("go", linters, { "golangci-lint" })
+    add_if_exist("gcc", linters, { "cpplint" })
 
     add_if_exist("python3", formatters, { "black" , "beautysh"})
     add_if_exist("terraform", formatters, { "terraform" })
     add_if_exist("node", formatters, { "prettier", "prettierd" })
     add_if_exist("go", formatters, { "gofumpt" })
+    add_if_exist("gcc", formatters, { "clang-format" })
 
     return lsps, linters, formatters
 end

@@ -1,7 +1,11 @@
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter-context"
+        },
 		build = ":TSUpdate",
+        branch = "main",
 		event = { "BufReadPost", "BufNewFile" },
 		config = function()
 			require("nvim-treesitter").setup({

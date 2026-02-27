@@ -30,20 +30,22 @@ return {
             vim.api.nvim_set_hl(0, "DiagnosticInfo", { fg = "#83a598" })
             vim.api.nvim_set_hl(0, "DiagnosticHint", { fg = "#8ec07c" })
 
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
+			local capabilities = vim.lsp.protocol.make_client_capabilities()
+			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+			-- local capabilities = require("cmp_nvim_lsp").default_capabilities()
             vim.lsp.config("lua_ls", {
+                telemetry = { enable = false },
                 capabilities = capabilities,
                 settings = {
                     Lua = {
-                        runtime = {
-                            version = "LuaJIT"
+                        workspace = {
+                            library = {
+                                [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                                [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+                            }
                         },
                         diagnostics = {
-                            globals = { "vim", "require" },
-                        },
-                        telemetry = {
-                            enable = false
+                            globals = { "vim" }
                         }
                     },
                 },
@@ -67,6 +69,14 @@ return {
             })
 
             vim.lsp.config("pyright",{
+                capabilities = capabilities,
+            })
+
+            vim.lsp.config("eslint",{
+                capabilities = capabilities,
+            })
+
+            vim.lsp.config("clangd",{
                 capabilities = capabilities,
             })
 
@@ -109,8 +119,8 @@ return {
 			require("mason").setup()
 
 			require("mason-lspconfig").setup({
-				ensure_installed = tools.lsp_to_install,
-			})
+                ensure_installed = tools.lsp_to_install,
+            })
 
 			require("mason-tool-installer").setup({
 				ensure_installed = tools.all_tools
