@@ -36,9 +36,15 @@ return {
                 capabilities = capabilities,
                 settings = {
                     Lua = {
-                        diagnostics = {
-                            globals = { 'vim' },
+                        runtime = {
+                            version = "LuaJIT"
                         },
+                        diagnostics = {
+                            globals = { "vim", "require" },
+                        },
+                        telemetry = {
+                            enable = false
+                        }
                     },
                 },
             })
@@ -90,17 +96,17 @@ return {
                 settings = {
                     yaml = {
                         schemaStore = { enable = false, url = "" },
-                        schemas = require("schemastore").yaml.schemas({}),
-                        validate = true,
-                        completion = true,
-                        hover = true,
+                        -- schemas = require("schemastore").yaml.schemas({}),
+                        -- validate = true,
+                        -- completion = true,
+                        -- hover = true,
                     },
                 },
             })
 
-			require("mason").setup()
-
             local tools = require("core.tools")
+
+			require("mason").setup()
 
 			require("mason-lspconfig").setup({
 				ensure_installed = tools.lsp_to_install,

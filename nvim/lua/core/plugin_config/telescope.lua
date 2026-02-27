@@ -12,26 +12,14 @@ return {
 			{
 				"<leader>f",
 				function()
-					require("telescope.builtin").find_files({
-                        searchdirs = {
-                        vim.loop.cwd(),
-                            "/workspaces",
-                            "~"
-                        }
-					})
+					require("telescope.builtin").find_files()
 				end,
 				desc = "Find files from home",
 			},
 			{
 				"<leader>g",
 				function()
-					require("telescope.builtin").live_grep({
-                        searchdirs = {
-                        vim.loop.cwd(),
-                            "/workspaces",
-                            "~"
-                        }
-					})
+					require("telescope.builtin").live_grep()
 				end,
 				desc = "Grep files from home",
 			},
@@ -55,9 +43,11 @@ return {
 				pickers = {
 					find_files = {
 						hidden = true,
+                        search_dirs = {"~", "/workspaces/"}
 					},
 					live_grep = {
 						additional_args = { "--hidden" },
+                        search_dirs = {"~", "/workspaces/"}
 					},
 				},
 				extensions = {
