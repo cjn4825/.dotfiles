@@ -179,5 +179,3 @@ if [ "$CHANGED" = true ]; then
 else
     echo "System is already bootstrapped"
 fi
-
-exec bash
