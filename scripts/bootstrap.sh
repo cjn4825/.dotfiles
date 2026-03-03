@@ -124,6 +124,13 @@ checkmise "fzf" "$FZF_VERSION"
 checkmise "python" "$PY_VERSION"
 checkmise "node" "$NODE_VERSION"
 
+# install tree-sitter-cli
+if ! command -v tree-sitter >/dev/null 2>&1; then
+	CHANGED=true
+    echo "Adding tree-sitter-cli..."
+    "$HOME/.local/share/mise/installs/node/$NODE_VERSION/bin/npm" install -g tree-sitter-cli
+fi
+
 SOURCE="
 # --- start of dotfiles config link ---
 if [ -d \"\$HOME/.bashrc.d\" ]; then
