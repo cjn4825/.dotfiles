@@ -1,11 +1,22 @@
 # Development Environment Files 
 
 Includes dot files used for my customized, fast, and relatively minimal development setup built on [Neovim](https://neovim.io/).
-In the process of reducing the number of plugins needed to complete tasks without limiting features, and includes dot files for other dependencies within Neovim.
+In the process of reducing the number of plugins needed to complete tasks without limiting features, it includes dot files for other dependencies within Neovim.
 
 # Reasoning
 
 One summer, I bought an older laptop with the goal of installing some Linux distribution and learn more about it. At the time, I was thinking this laptop would be some sort of hacking lab or something, and I had the idea to try to use the Command Line whenever I could. I tried nano, then emacs, but settled on Neovim due to its customizability and documentation availability. After months and months of researching and getting comfortable using it, I started to appreciate and have a better feel for Linux in general. These dotfiles are used for the Neovim config.
+
+# Usage
+
+## Code
+```bash
+git clone https://github.com/cjn4825/.dotfiles.git
+source ~/.dotfiles/scripts/bootstrap.sh
+```
+
+## What this does
+These dotfiles are designed to work without any dependencies (besides git) and include all the tools needed, such as npm and python for building the linters and formatters. This script modifies ~/.bashrc and works within devcontainers and normal environments as well.  
 
 # Folders
 
@@ -19,7 +30,7 @@ This includes cosmetic changes I've made to the command prompt line, which inclu
 This includes config files needed for tmux, the multiplexer I use, so that I can have multiple terminals and windows open, and contains the logic of how it interacts with Neovim for seamless switching.
 
 ## fonts/firacode
-This includes the firacode font. The font allows for the use of devicons which make the whole look of neovim much better.
+This includes the Firacode font. The font allows for the use of devicons, which make the whole look of Neovim much better.
 
 # Skills Gained
 
