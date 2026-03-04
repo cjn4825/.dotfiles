@@ -14,6 +14,15 @@ return {
             return false
         end
 
+        local selene = lint.linters.selene
+        selene.args = {
+            "--config",
+            vim.fn.stdpath("config") .. "/selene.toml",
+            "--display-style",
+            "quiet",
+            "-"
+        }
+
 		lint.linters_by_ft = {
 			lua = check("selene") and { "selene" } or {},
 			sh = check("shellcheck") and { "shellcheck" } or {},

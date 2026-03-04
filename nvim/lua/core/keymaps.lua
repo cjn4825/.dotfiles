@@ -1,49 +1,64 @@
-vim.g.mapleader = ','
-vim.g.maplocalleader = ','
+vim.g.mapleader = ","
+vim.g.maplocalleader = ","
 
-vim.opt.backspace = '2'
-vim.opt.showcmd = true
-vim.opt.laststatus = 2
-vim.opt.autowrite = true
-vim.opt.autoread = true
+local opt = vim.opt
+opt.guicursor = "n-v-c-i:block"
+opt.backspace = "2"
+opt.showcmd = true
+opt.laststatus = 3
+opt.autowrite = true
+opt.autoread = true
+opt.tabstop = 4
+opt.shiftwidth = 4
+opt.shiftround = true
+opt.expandtab = true
+opt.termguicolors = true
+opt.number = true
+opt.ruler = true
+opt.shortmess:append("I")
+opt.hlsearch = false
+opt.showmode = false
+opt.signcolumn = "yes"
+opt.clipboard = "unnamedplus"
+opt.swapfile = false
 
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.shiftround = true
-vim.opt.expandtab = true
-vim.g.tmux_navigator_no_mappings = 1
-vim.o.termguicolors = true
-vim.cmd [[
-    set encoding=utf-8
-    set ruler
-    set nu
-    set shm+=I
-    set nohlsearch
-    set noshowmode
-    set signcolumn=yes
-    set t_ut=
-    set gcr=a:blinkon1
+local keymap = vim.keymap
+keymap.set("n", "<leader>v", "<cmd>vsplit<cr>")
+keymap.set("n", "<leader>h", "<cmd>split<cr>")
 
-    let g:loaded_perl_provider = 0
-    let g:loaded_node_provider = 0
+keymap.set("n", "i", function()
+    return string.match(vim.api.nvim_get_current_line(), "%g") == nil and "cc" or "i"
+end, { expr = true })
 
-    "" split screen vert and horizontal
-    nnoremap <leader>v <cmd>vsplit<cr>
-    nnoremap <leader>h <cmd>split<cr>
+vim.api.nvim_create_autocmd("BufReadPost", {
+    desc = "Remember cursor position",
+    callback = function()
+        local mark = vim.api.nvim_buf_get_mark(0, '"')
+        if mark[1] > 0 and mark[1] <= vim.api.nvim_buf_line_count(0) then
+            pcall(vim.api.nvim_win_set_cursor, 0, mark)
+        end
+    end,
+})
 
-    set clipboard+=unnamedplus
+local function highlight_whitespace()
+    local ignore_fts = { "mason", "Lazy", "checkhealth" }
+    local ignore_bts = { "terminal", "nofile", "prompt" }
 
-    set noswapfile
+    if vim.tbl_contains(ignore_fts, vim.bo.filetype) or
+        vim.tbl_contains(ignore_bts, vim.bo.buftype) then
+        return
+    end
 
-     "" Remember cursor position
- augroup vimrc-remember-cursor-position
-     autocmd!
-     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
- augroup END
-]]
+    pcall(vim.fn.matchdelete, 10)
+    vim.fn.matchadd("TrailingWhitespace", [[\s\+$]], 11, 10)
+end
 
--- auto indent going into insert mode in scope
-vim.keymap.set('n', 'i', function ()
-    return string.match(vim.api.nvim_get_current_line(), '%g') == nil and 'cc' or 'i'
-end, {expr=true, noremap=true})
+vim.api.nvim_create_autocmd({ "BufWinEnter", "InsertLeave" }, {
+    callback = highlight_whitespace
+})
 
+vim.api.nvim_create_autocmd("InsertEnter", {
+    callback = function()
+        pcall(vim.fn.matchdelete, 10)
+    end,
+})

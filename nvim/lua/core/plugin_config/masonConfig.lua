@@ -9,6 +9,7 @@ return {
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 		},
 		config = function()
+			require("mason").setup()
 
 			vim.diagnostic.config({
 				virtual_text = { prefix = "●" },
@@ -31,8 +32,12 @@ return {
             vim.api.nvim_set_hl(0, "DiagnosticHint", { fg = "#8ec07c" })
 
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
-			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
-			-- local capabilities = require("cmp_nvim_lsp").default_capabilities()
+			capabilities = vim.tbl_deep_extend(
+                "force",
+                capabilities,
+                require("cmp_nvim_lsp").default_capabilities()
+            )
+
             vim.lsp.config("lua_ls", {
                 telemetry = { enable = false },
                 capabilities = capabilities,
@@ -116,8 +121,6 @@ return {
 
             local tools = require("core.tools")
 
-			require("mason").setup()
-
 			require("mason-lspconfig").setup({
                 ensure_installed = tools.lsp_to_install,
             })
@@ -125,6 +128,10 @@ return {
 			require("mason-tool-installer").setup({
 				ensure_installed = tools.all_tools
 			})
+
+            for _, server in ipairs(tools.lsp_to_install) do
+                vim.lsp.enable(server)
+            end
 
 			vim.api.nvim_create_autocmd("LspAttach", {
 				callback = function(event)

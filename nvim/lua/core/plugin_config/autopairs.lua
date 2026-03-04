@@ -1,5 +1,11 @@
 return {
-	"jiangmiao/auto-pairs",
-	event = "InsertEnter",
-	desc = "autopairs for delimeters such as {} [] ect",
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    config = function()
+        require("nvim-autopairs").setup({
+            check_ts = true,
+            disable_filetype = { "TelescopePrompt" },
+            enable_check_bracket_pair = true,
+        })
+    end
 }

@@ -1,0 +1,5 @@
+# ~/.config/nvim/selene.toml
+std="vim"
+
+[lints]
+mixed_table="allow"
