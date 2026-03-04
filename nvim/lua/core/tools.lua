@@ -25,7 +25,7 @@ local function get_tools()
     add_if_exist("sh", linters, { "shellcheck", "hadolint", "actionlint" })
     add_if_exist("terraform", linters, { "tflint" })
     add_if_exist("node", linters, { "jsonlint", "eslint_d" })
-    add_if_exist("go", linters, { "golangci-lint" })
+    add_if_exist("go", linters, { "revive" })
     add_if_exist("gcc", linters, { "cpplint" })
 
     add_if_exist("python3", formatters, { "black" , "beautysh"})
