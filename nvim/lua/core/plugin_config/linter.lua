@@ -35,6 +35,7 @@ return {
 			terraform = check("tflint") and { "tflint" } or {},
 			python = check("bandit") and { "bandit" } or {},
 			go = check("golangci-lint") and { "golangci-lint" } or {},
+			php = check("phpstan") and { "phpstan" } or {},
 		}
 
 		vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "InsertLeave" }, {

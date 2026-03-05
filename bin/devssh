@@ -4,4 +4,10 @@
 
 set -e
 
-devpod ssh --silent
+if [[ ! -n "$TMUX" ]]; then
+    devpod ssh --silent
+else
+    printf "devssh is not allowed inside a tmux session\n"
+    exit
+fi
+

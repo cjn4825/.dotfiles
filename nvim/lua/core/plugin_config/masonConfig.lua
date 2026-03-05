@@ -89,6 +89,10 @@ return {
                 capabilities = capabilities,
             })
 
+            vim.lsp.config("intelephense",{
+                capabilities = capabilities,
+            })
+
             vim.lsp.config("bashls", {
                 single_file_support = true,
                 capabilities = capabilities,
