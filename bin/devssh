@@ -4,10 +4,28 @@
 
 set -e
 
-if [[ ! -n "$TMUX" ]]; then
-    devpod ssh --silent
-else
-    printf "devssh is not allowed inside a tmux session\n"
-    exit
-fi
+INPUT="$1"
 
+MENU="
+Usage: devssh
+
+Uses devpod's ssh in silent mode
+
+Examples:
+    devssh
+    devssh --help
+"
+
+if [[ "$INPUT" == "--help" ]]; then
+    echo "$MENU"
+    exit 0
+elif [[ "$INPUT" == "" ]]; then
+    if [[ ! -n "$TMUX" ]]; then
+        devpod ssh --silent
+    else
+        printf "devssh is not allowed inside a tmux session\n"
+        exit
+    fi
+else
+    echo "Error: Input of '$INPUT' is not valid."
+fi
