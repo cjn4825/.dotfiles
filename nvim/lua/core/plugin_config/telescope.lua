@@ -41,7 +41,7 @@ return {
 
 			telescope.setup({
                 defaults = {
-                    file_ignore_patters = {
+                    file_ignore_patterns = {
                         "node_modules/.*",
                         ".git/.*"
                     }
@@ -49,11 +49,11 @@ return {
 				pickers = {
 					find_files = {
 						hidden = true,
-                        search_dirs = {"~", "/workspaces/"}
+                        search_dirs = {vim.fn.expand("~"), "/workspaces/"}
 					},
 					live_grep = {
 						additional_args = { "--hidden" },
-                        search_dirs = {"~", "/workspaces/"}
+                        search_dirs = {vim.fn.expand("~"), "/workspaces/"}
 					},
 				},
 				extensions = {

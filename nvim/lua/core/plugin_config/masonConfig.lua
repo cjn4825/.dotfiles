@@ -69,10 +69,6 @@ return {
                 },
             })
 
-            vim.lsp.config("terraformls",{
-                capabilities = capabilities,
-            })
-
             vim.lsp.config("pyright",{
                 capabilities = capabilities,
             })
@@ -89,7 +85,7 @@ return {
                 capabilities = capabilities,
             })
 
-            vim.lsp.config("intelephense",{
+            vim.lsp.config("dockerls",{
                 capabilities = capabilities,
             })
 
@@ -125,12 +121,13 @@ return {
 
             local tools = require("core.tools")
 
-			require("mason-lspconfig").setup({
-                ensure_installed = tools.lsp_to_install,
-            })
+			require("mason-lspconfig").setup()
 
 			require("mason-tool-installer").setup({
-				ensure_installed = tools.all_tools
+				ensure_installed = tools.all_tools,
+                run_on_start = false,
+                auto_update = false
+
 			})
 
             for _, server in ipairs(tools.lsp_to_install) do

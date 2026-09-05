@@ -1,17 +1,26 @@
 return {
-	{
-		"nvim-treesitter/nvim-treesitter",
-		build = ":TSUpdate",
+      {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
         branch = "main",
-		event = { "BufReadPost", "BufNewFile" },
-		config = function()
-			require("nvim-treesitter").setup({
-				auto_install = true,
-				sync_install = false,
-				highlight = {
-					enable = true,
-				},
-			})
-		end,
-	},
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+                local ts = require("nvim-treesitter")
+                ts.setup({})
+
+                local parsers = {
+                    "c", "lua", "bash", "python", "json", "yaml",
+                    "dockerfile", "go", "javascript", "markdown",
+                }
+
+                ts.install(parsers)
+
+                vim.api.nvim_create_autocmd("FileType", {
+                    pattern = parsers,
+                    callback = function()
+                            vim.treesitter.start()
+                    end,
+                })
+        end,
+      },
 }

@@ -1,7 +1,6 @@
-# Development Environment Files 
+# Development Environment Files
 
-Includes dot files used for my customized, fast, and relatively minimal development setup built on [Neovim](https://neovim.io/).
-In the process of reducing the number of plugins needed to complete tasks without limiting features, it includes dot files for other dependencies within Neovim.
+Includes dot files used for my customized, fast, and relatively minimal development setup built on [Neovim](https://neovim.io/). This project is semi contained with the tools needed through [Mise(https://mise.jdx.dev/)] details can be found within the Scripts/bootstrap.sh file on how it is implemented.
 
 # Reasoning
 
@@ -11,17 +10,18 @@ One summer, I bought an older laptop with the goal of installing some Linux dist
 
 ## Code
 ```bash
+cd
 git clone https://github.com/cjn4825/.dotfiles.git
 source ~/.dotfiles/scripts/bootstrap.sh
 ```
 
 ## What this does
-These dotfiles are designed to work without any dependencies (besides git) and include all the tools needed, such as npm and python for building the linters and formatters. This script modifies ~/.bashrc and works within devcontainers and normal environments as well.  
+These dotfiles are designed to work without any dependencies via mise and include all the tools needed, such as npm and python for building the linters and formatters. This script modifies ~/.bashrc and works within devcontainers and normal environments as well of most architectures.
 
 # Folders
 
 ## nvim
-This includes the bulk and focus of this project, which is all the config files needed for Neovim to work like how I want it to...again, it's a work in progress, so there WILL be errors that pop up now and again, but will be fixed soon.
+This includes the bulk and focus of this project, which is all the config files needed for Neovim to work like how I want it to.
 
 ## bash
 This includes cosmetic changes I've made to the command prompt line, which includes colors that match the theme, username, and hostname on the system, and a status that shows what git branch you're in.
@@ -29,18 +29,14 @@ This includes cosmetic changes I've made to the command prompt line, which inclu
 ## tmux
 This includes config files needed for tmux, the multiplexer I use, so that I can have multiple terminals and windows open, and contains the logic of how it interacts with Neovim for seamless switching.
 
-## fonts/firacode
-This includes the Firacode font. The font allows for the use of devicons, which make the whole look of Neovim much better.
-
 # Skills Gained
 
 By building and using this environment for more than a year now, I've gained and improved skills in:
 
-* Linux Proficiency: daily terminal workflow, Package management, file permissions, system navigation, symbolic links, file systems, user permissions, and management
-* Shell Proficiency: Bash usage, shell scripting, tmux multiplexer
-* Programming aid: Language Server Protocols with languages such as Python, Bash, and Lua 
-* Configuration Management: environment variables, modular Lua configuration, plugin management with Packer, and maintaining dotfiles to my liking
-* Version Control: Git integration directly inside Neovim with Lazygit for easy remote syncing (probably get rid of later since I use git in another tmux pane most times)
+* Linux Proficiency: daily terminal workflow, Package management, file permissions, system navigation, symbolic links, file systems, user permissions, and management.
+* Shell Proficiency: Bash usage, shell scripting, tmux multiplexer.
+* Programming aid: Language Server Protocols with languages such as C, Go, Python, Bash, and Lua.
+* Configuration Management: Modular Lua configuration, plugin management with Lazy, and maintaining dotfiles to my liking.
 
 # Example of Environment
 

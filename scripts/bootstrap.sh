@@ -3,21 +3,29 @@
 # This script is for bootstrapping environments for neovim use
 # Works as a way to package all the tooling I need for
 # neovim without needing root access to the system
-
-set -e
+# as well as any tools pre/post installed when given
+# access manually
 
 # main boolean to check if nothing changed or not
 CHANGED=false
 
+CONTAINER=false
+USERBIN="$HOME/.local/bin"
+MISEBIN="$USERBIN/mise"
+
+# bool for checking if in container
+VIRT_TYPE="$(systemd-detect-virt --container 2>/dev/null)"
+if [ "$VIRT_TYPE" != "none" ] && [ "$VIRT_TYPE" != "wsl" ]; then
+    CONTAINER=true
+fi
+
 # check if not container to set dotfiles dir
-if [ -d "/workspaces" ]; then
+if [ "$CONTAINER" = true ]; then
     DOTFILES="$HOME/dotfiles"
 else
     DOTFILES="$HOME/.dotfiles"
 fi
 
-USERBIN="$HOME/.local/bin"
-MISEBIN="$USERBIN/mise"
 
 # creates ~/.config if not already there
 if [ ! -d "$HOME/.config" ]; then
@@ -72,12 +80,16 @@ if ! grep -q "sets user path to" "$HOME/.bashrc"; then
     echo "$USERPATH" >> "$HOME/.bashrc"
 fi
 
-# download mise if not already on the system
+# download mise if not already on the system with arch detection
 if [ ! -f "$MISEBIN" ]; then
-    CHANGED=true
-    echo "Downloading mise via curl..."
-    curl -Lo "$MISEBIN" "https://mise.jdx.dev/mise-latest-linux-x64" 2>&1
-    chmod +x "$MISEBIN"
+    ARCH="$(uname -m)"
+    case "$ARCH" in
+        x86_64)  MISE_ARCH="x64" ;;
+        aarch64) MISE_ARCH="arm64" ;;
+        *) echo "ERROR Unsupported architecture: $ARCH" >&2; exit 1 ;;
+    esac
+
+    curl -Lo "$MISEBIN" "https://mise.jdx.dev/mise-latest-linux-$MISE_ARCH"
 fi
 
 MISEPATH="
@@ -86,9 +98,8 @@ export PATH=\"\$PATH:\$HOME/.local/share/mise/shims\"
 #--- end of mise shims config
 "
 
-# only do anything with mise if the project is inside a container
-# and if the env var is not set yet
-if [ ! -d "/workspaces" ]; then
+# adjust path if inside a container
+if [ "$CONTAINER" = true ]; then
     if ! grep -q "mise tool shims" "$HOME/.bashrc"; then
         CHANGED=true
         echo "Adding mise tools to PATH"
@@ -107,14 +118,15 @@ checkmise() {
     fi
 }
 
-# sets specific versions to use
-NEOVIM_VERSION="0.11.6"
-TMUX_VERSION="3.6a"
-RG_VERSION="15.1.0"
-FD_VERSION="10.3.0"
-FZF_VERSION="0.67.0"
+NEOVIM_VERSION="0.12.5"
+TMUX_VERSION="3.6b"
+RG_VERSION="15.2.0"
+FD_VERSION="10.5.0"
+FZF_VERSION="0.74.0"
 PY_VERSION="3.14.3"
-NODE_VERSION="25.6.1"
+NODE_VERSION="26.8.1"
+TS_VERSION="0.27.0"
+CLAUDE_VERSION="2.1.261"
 
 checkmise "neovim" "$NEOVIM_VERSION"
 checkmise "tmux" "$TMUX_VERSION"
@@ -123,13 +135,8 @@ checkmise "fd" "$FD_VERSION"
 checkmise "fzf" "$FZF_VERSION"
 checkmise "python" "$PY_VERSION"
 checkmise "node" "$NODE_VERSION"
-
-# install tree-sitter-cli
-if ! command -v tree-sitter >/dev/null 2>&1; then
-	CHANGED=true
-    echo "Adding tree-sitter-cli..."
-    "$HOME/.local/share/mise/installs/node/$NODE_VERSION/bin/npm" install -g tree-sitter-cli
-fi
+checkmise "tree-sitter" "$TS_VERSION"
+checkmise "claude" "$CLAUDE_VERSION"
 
 SOURCE="
 # --- start of dotfiles config link ---
@@ -166,11 +173,17 @@ fi
 # --- end of devcontainer tmux config ---
 "
 
-# check if host is a container
-if [ -d "/workspaces" ] && ! grep -q "start of devcontainer tmux config" "$HOME/.bashrc"; then
+# Tmux logic check if host is a container
+if [ "$CONTAINER" = true ] && ! grep -q "start of devcontainer tmux config" "$HOME/.bashrc"; then
     CHANGED=true
     echo "Adding tmux sesssion auto attach to .bashrc..."
     echo "$TMUX" >> "$HOME/.bashrc"
+fi
+
+# remove any non-tracked mise related binaries
+if [[ -n "$("$MISEBIN" ls --prunable 2>/dev/null)" ]]; then
+    echo "Removing old tools..."
+    "$MISEBIN" prune --tools -y
 fi
 
 # output different based on CHANGED value
