@@ -1,6 +1,6 @@
 # Development Environment Files
 
-Includes dot files used for my customized, fast, and relatively minimal development setup built on [Neovim](https://neovim.io/). This project is semi contained with the tools needed through [Mise](https://mise.jdx.dev/)] details can be found within the Scripts/bootstrap.sh file on how it is implemented.
+Includes dot files used for my customized, fast, and relatively minimal development setup built on [Neovim](https://neovim.io/). This project is semi contained with the tools needed through [Mise](https://mise.jdx.dev/) details can be found within the Scripts/bootstrap.sh file on how it is implemented.
 
 # Reasoning
 
