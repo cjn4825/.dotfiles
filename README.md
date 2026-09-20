@@ -1,18 +1,37 @@
 # Development Environment Files
 
-Includes dot files used for my customized, fast, and relatively minimal development setup built on [Neovim](https://neovim.io/). This project is semi-contained, with the tools needed through [Mise](https://mise.jdx.dev/); details can be found within the Scripts/bootstrap.sh file on how it is implemented.
-
-# Reasoning
-
-One summer, I bought an older laptop to install a Linux distribution and learn more about it. At the time, I was thinking this laptop would be some sort of hacking lab or something, and I had the idea to try to use the Command Line whenever I could. I tried nano, then emacs, but settled on Neovim due to its customizability and documentation availability. After months and months of researching and getting comfortable using it, I started to appreciate and have a better feel for Linux in general. These dotfiles are used for the Neovim config.
+Includes dotfiles used for my customized, fast, and relatively minimal development setup built on [Neovim](https://neovim.io/). This project is semi-contained, with the tools installed through [Mise](https://mise.jdx.dev/); details can be found within the Scripts/bootstrap.sh file on how it is implemented. Additionally, [Gopass](https://github.com/gopasspw/gopass) is used as a secrets manager which encrypts using the 'age' crypto backend, and serves as a way to quickly pull down secrets needed on a host; more details can be found within the bootstrap file as well.
 
 # Usage
 
 ## Code
 ```bash
-cd
+# go to home dir
 git clone https://github.com/cjn4825/.dotfiles.git
+
+# source script
 source ~/.dotfiles/scripts/bootstrap.sh
+
+# follow the rest of the prompts to continue configuring gopass
+# after gopass the rest is automated
+```
+
+## Install tools
+
+Add the tool name and version in the config.toml file in /mise.
+
+## Remove tools
+
+To remove tools, use the 'uninstall' command if you want to remove the binary on your system while keeping it defined in the toml file.
+
+```bash
+mise uninstall [tool name]
+```
+
+Or use the 'rm' command if you want to remove both the binary file and the toml file.
+
+```bash
+mise rm [tool name]
 ```
 
 ## What this does
@@ -29,11 +48,19 @@ This includes cosmetic changes I've made to the command prompt line, which inclu
 ## tmux
 This includes config files needed for tmux, the multiplexer I use, so that I can have multiple terminals and windows open, and contains the logic of how it interacts with Neovim for seamless switching.
 
-# Troubleshooting
-If you can't use tools provided by mise, try sourcing your bashrc
+## mise
+This includes the config toml file that indicates which tools should be installed with mise.
+
+## bin
+This includes some simple wrapper bash "binaries" to run tools such as devpod and claude in a specific way. More details can be found within the scripts.
+
+# Areas for Improvement
+
+* I could make the use of gopass optional since, as of right now, I only use it for claude API key and probably won't need that for all systems.
+* Many more, but I think its pretty good.
 
 # Example of Environment
 
-Disclaimer: Your Neovim most likely won't look like this due to the desktop terminal emulator being used. The default terminal in Fedora with a gruvbox theme being used will look close, but mine is customized.
+Disclaimer: Your Neovim most likely won't look like this due to the desktop terminal emulator being used. The default terminal in Fedora with a gruvbox theme being used will look close, but mine is customized with a gruvbox theme.
 
 ![example picture](nvim/Neovim_example.png)

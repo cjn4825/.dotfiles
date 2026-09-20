@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# simple wrapper that runs claude with injecting token for
+# claude specific child process memory
+
+set -e
+
+host="$(hostname -s)"
+
+ANTHROPIC_API_KEY="$(gopass show -o "${host}"/api/anthropic/)" command claude "$@"
