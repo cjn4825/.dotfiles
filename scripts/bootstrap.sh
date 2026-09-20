@@ -6,6 +6,12 @@
 # as well as any tools pre/post installed when given
 # access manually
 
+#TODO:
+    # remove dev_secrets.git repo
+    # restart gopass conifg on both hosts
+    # move text ouptut to readme? for the gopass setup
+    # fix folder creation to look better
+
 CONTAINER=false
 USERBIN="$HOME/.local/bin"
 MISEBIN="$USERBIN/mise"
@@ -49,24 +55,19 @@ if [[ \$- == *i* ]]; then
 fi
 # --- end of devcontainer tmux config ---
 "
+
 GOPASS="
 gopass has no password store set up yet.
-If you need to setup a new vault:
-to setup age crypto backend:
+
+setup age crypto backend:
 
     gopass setup --crypto age
 
 Make sure the vault is populated with the secrets you want:
 
-    For example: gopass insert (hostname)/foo/bar
+    For example: gopass insert /foo/bar
 
-Push to remote if remote has no secrets
-
-If you already have a remote vault:
-
-    gopass git clone git@github.com:{user}/{vault repo}.git
-
-Then just re-sourceing this script to continue
+Then just re-sourceing this script to finalize
 
 "
 
@@ -86,6 +87,7 @@ containerCheck() {
     fi
 }
 
+# fix this to be better... ingegrate with dotlink better
 createDirs() {
 
     if [ ! -d "$HOME/.config" ]; then
@@ -224,7 +226,10 @@ bootStrap() {
         return
     fi
 
+    # find way to prompt user for gopass input? for inserting secrets?
+    # loop like how many secrets are you inputing? then loop for that amount
+
     echo "Bootstrapping finished"
 }
 
-bootStrap
+bootStrap "$@"

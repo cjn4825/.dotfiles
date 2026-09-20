@@ -1,6 +1,6 @@
 # Development Environment Files
 
-Includes dotfiles used for my customized, fast, and relatively minimal development setup built on [Neovim](https://neovim.io/). This project is semi-contained, with the tools installed through [Mise](https://mise.jdx.dev/); details can be found within the Scripts/bootstrap.sh file on how it is implemented. Additionally, [Gopass](https://github.com/gopasspw/gopass) is used as a secrets manager which encrypts using the 'age' crypto backend, and serves as a way to quickly pull down secrets needed on a host; more details can be found within the bootstrap file as well.
+Includes dotfiles used for my customized, fast, and relatively minimal development setup built on [Neovim](https://neovim.io/). This project is semi-contained, with the tools installed through [Mise](https://mise.jdx.dev/); details can be found within the Scripts/bootstrap.sh file on how it is implemented. Additionally, [Gopass](https://github.com/gopasspw/gopass) is used as a secrets manager which encrypts using the 'age' crypto backend, and serves as a way to quickly and securely add secrets needed on a host; more details can be found within the bootstrap file as well.
 
 # Usage
 
@@ -57,6 +57,7 @@ This includes some simple wrapper bash "binaries" to run tools such as devpod an
 # Areas for Improvement
 
 * I could make the use of gopass optional since, as of right now, I only use it for claude API key and probably won't need that for all systems.
+* Originally wanted to use a remote repo for storing the secrets, but due to limintations of the age backend with gopass the solution is super jank (have to go back and forth between hosts and manually loop through to recrypt secrets)
 * Many more, but I think its pretty good.
 
 # Example of Environment

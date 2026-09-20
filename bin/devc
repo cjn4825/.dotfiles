@@ -5,6 +5,4 @@
 
 set -e
 
-host="$(hostname -s)"
-
-ANTHROPIC_API_KEY="$(gopass show -o "${host}"/api/anthropic/)" command claude "$@"
+ANTHROPIC_API_KEY="$(gopass show -o /api/anthropic/)" command claude "$@"
