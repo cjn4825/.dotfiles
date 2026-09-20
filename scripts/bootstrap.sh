@@ -6,10 +6,6 @@
 # as well as any tools pre/post installed when given
 # access manually
 
-# main booleans to check if changes were made
-CHANGED=false
-GOPASSCHANGE=false
-
 CONTAINER=false
 USERBIN="$HOME/.local/bin"
 MISEBIN="$USERBIN/mise"
@@ -60,15 +56,12 @@ to setup age crypto backend:
 
     gopass setup --crypto age
 
-Then optionally add remote gopass vault
-
-    gopass git remote add origin git@github.com:{user}/{vault repo}.git
-
 Make sure the vault is populated with the secrets you want:
 
     For example: gopass insert (hostname)/foo/bar
 
 Push to remote if remote has no secrets
+
 If you already have a remote vault:
 
     gopass git clone git@github.com:{user}/{vault repo}.git
@@ -96,25 +89,21 @@ containerCheck() {
 createDirs() {
 
     if [ ! -d "$HOME/.config" ]; then
-        CHANGED=true
         echo "Creating .config dir..."
         mkdir -p "$HOME/.config"
     fi
 
     if [ ! -d "$HOME/.local/bin" ]; then
-        CHANGED=true
         echo "Creating .local/bin dir..."
         mkdir -p "$HOME/.local/bin"
     fi
 
     if [ ! -d "$HOME/.bashrc.d" ]; then
-        CHANGED=true
         echo "Creating .bashrc.d dir..."
         mkdir -p "$HOME/.bashrc.d"
     fi
 
     if [ ! -d "$HOME/.config/mise" ]; then
-        CHANGED=true
         echo "Creating .config/mise dir..."
         mkdir -p "$HOME/.config/mise"
     fi
@@ -127,7 +116,6 @@ dotlink() {
 
     # if already linked then nothing is linked otherwise force it
     if [ "$(readlink -f "$confLocation")" != "$dotLocation" ]; then
-        CHANGED=true
         echo "Linking [$dotLocation] -> [$confLocation]"
         rm -rf "$confLocation"
         ln -sfn "$dotLocation" "$confLocation"
@@ -143,7 +131,6 @@ addBashRc() {
             echo "[WARNING]: PATH is modified in .bashrc confirm this doesn't effect bootstrapping"
         fi
 
-        CHANGED=true
         echo "Adding user path to .bashrc..."
         echo "$TOOLPATH" >> "$HOME/.bashrc"
     fi
@@ -152,7 +139,6 @@ addBashRc() {
     # and just always use mise for in and out
     if [ "$CONTAINER" = true ]; then
         if ! grep -q "mise tool shims" "$HOME/.bashrc"; then
-            CHANGED=true
             echo "Adding mise tools to PATH"
             echo "$MISEPATH" >> "$HOME/.bashrc"
         fi
@@ -160,14 +146,12 @@ addBashRc() {
 
     # check if .bashrc.d isn't mentioned in .bashrc
     if ! grep -q "start of .bashrc.d config link" "$HOME/.bashrc" && ! grep -q ".bashrc.d" "$HOME/.bashrc"; then
-        CHANGED=true
         echo "Adding .bashrc.d sourcing to .bashrc..."
         echo "$SOURCE" >> "$HOME/.bashrc"
     fi
 
     # Tmux logic check if host is a container
     if [[ $CONTAINER == true ]] && ! grep -q "start of devcontainer tmux config" "$HOME/.bashrc"; then
-        CHANGED=true
         echo "Adding tmux sesssion auto attach to .bashrc..."
         echo "$TMUX" >> "$HOME/.bashrc"
     fi
@@ -178,7 +162,6 @@ addBashRc() {
 # generating one requires a human to confirm a passphrase interactively
 checkGopassSetup() {
     if ! gopass ls >/dev/null 2>&1; then
-        GOPASSCHANGE=true
         echo "$GOPASS"
         return 1
     fi
@@ -203,7 +186,6 @@ setupMise() {
     mise trust "$HOME/.dotfiles/mise/config.toml" >/dev/null 2>&1
 
     if mise ls --missing 2>&1 | grep -q .; then
-        CHANGED=true
         mise install -y
     fi
 
@@ -218,15 +200,6 @@ sourceRc() {
     if [ -f "$HOME/.bashrc" ]; then
         shopt -s expand_aliases 2>/dev/null
         source "$HOME/.bashrc"
-    fi
-}
-
-output() {
-
-    if [[ "$CHANGED" == true || "$GOPASSCHANGE" == true ]]; then
-        echo "Bootstrapping finished"
-    else
-        echo "System is already bootstrapped"
     fi
 }
 
@@ -248,11 +221,10 @@ bootStrap() {
     sourceRc
 
     if ! checkGopassSetup; then
-        GOPASSCHANGE=true
         return
     fi
 
-    output
+    echo "Bootstrapping finished"
 }
 
 bootStrap
