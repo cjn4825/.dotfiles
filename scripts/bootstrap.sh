@@ -10,12 +10,6 @@ CONTAINER=false
 USERBIN="$HOME/.local/bin"
 MISEBIN="$USERBIN/mise"
 
-TOOLPATH="
-#--- sets user path to .local/bin and adds mise shims
-export PATH=\"\$HOME/.local/share/mise/shims:\$HOME/.local/bin:\$PATH\"
-#--- end of setting tool path
-"
-
 SOURCE="
 # --- start of .bashrc.d config link ---
 if [ -d \"\$HOME/.bashrc.d\" ]; then
@@ -25,48 +19,6 @@ if [ -d \"\$HOME/.bashrc.d\" ]; then
 fi
 unset file
 # --- end of .bashrc.d config link ---"
-
-MISEPATH="
-#--- sets mise tool shims to be in path
-export PATH=\"\$HOME/.local/share/mise/shims:\$PATH\"
-#--- end of mise shims config"
-
-TMUX="
-# --- start of devcontainer tmux config ---
-# only run in interactive shells
-if [[ \$- == *i* ]]; then
-
-    # check if we are already in tmux session
-    if command -v tmux >/dev/null 2>&1 && [ -z \"\$TMUX\" ]; then
-
-        # attach if the session exists otherwise create one
-        tmux a -t 0 >/dev/null 2>&1 || tmux new-session -s 0 >/dev/null 2>&1
-
-        exit 0
-    fi
-fi
-# --- end of devcontainer tmux config ---"
-
-SSHAGENT="
-# --- start of ssh agent forwarding config ---
-# adds ssh socket to allow devpod to forward credentials for devpod
-export SSH_AUTH_SOCK=\"\$HOME/.ssh/ssh-agent.sock\"
-
-ssh-add -l > /dev/null 2>&1
-status=\$?
-
-# 2 = can't reach the agent at all (dead/stale socket)
-if [ \"\$status\" -eq 2 ]; then
-    rm -f \"\$SSH_AUTH_SOCK\"
-    eval \"\$(ssh-agent -a \"\$SSH_AUTH_SOCK\")\" > /dev/null
-    status=1
-fi
-
-# 1 = agent is alive but has no keys loaded yet
-if [ \"\$status\" -ne 0 ]; then
-    ssh-add \"\$HOME/.ssh/id_rsa\"
-fi
-# --- end of ssh socket agent section ---"
 
 containerCheck() {
 
@@ -84,14 +36,6 @@ containerCheck() {
     fi
 }
 
-createDirs() {
-
-    mkdir -p "$HOME/.config"
-    mkdir -p "$HOME/.local/bin"
-    mkdir -p "$HOME/.bashrc.d"
-    mkdir -p "$HOME/.config/mise"
-}
-
 dotlink() {
 
     local dotLocation="$DOTFILES/$1"
@@ -102,47 +46,6 @@ dotlink() {
         echo "Linking [$dotLocation] -> [$confLocation]"
         rm -rf "$confLocation"
         ln -sfn "$dotLocation" "$confLocation"
-    fi
-}
-
-addBashRc() {
-
-    # if user path isn't added already
-    if ! grep -q "sets user path to" "$HOME/.bashrc"; then
-
-        if grep -q "PATH" "$HOME/.bashrc"; then
-            echo "[WARNING]: PATH is modified in .bashrc confirm this doesn't effect bootstrapping"
-        fi
-
-        echo "Adding user path to .bashrc..."
-        echo "$TOOLPATH" >> "$HOME/.bashrc"
-    fi
-
-    # adjust path if inside a container
-    # and just always use mise for in and out
-    if [ "$CONTAINER" = true ]; then
-        if ! grep -q "mise tool shims" "$HOME/.bashrc"; then
-            echo "Adding mise tools to PATH"
-            echo "$MISEPATH" >> "$HOME/.bashrc"
-        fi
-    fi
-
-    # check if .bashrc.d isn't mentioned in .bashrc
-    if ! grep -q "start of .bashrc.d config link" "$HOME/.bashrc" && ! grep -q ".bashrc.d" "$HOME/.bashrc"; then
-        echo "Adding .bashrc.d sourcing to .bashrc..."
-        echo "$SOURCE" >> "$HOME/.bashrc"
-    fi
-
-    # Tmux logic check if host is a container
-    if [[ $CONTAINER == true ]] && ! grep -q "start of devcontainer tmux config" "$HOME/.bashrc"; then
-        echo "Adding tmux sesssion auto attach to .bashrc..."
-        echo "$TMUX" >> "$HOME/.bashrc"
-    fi
-
-    # SSH forwarding logic only if not in a container
-    if [[ $CONTAINER == false ]] && ! grep -q "start of ssh agent forwarding config" "$HOME/.bashrc"; then
-        echo "Adding SSH agent forwarding to .bashrc..."
-        echo "$SSHAGENT" >> "$HOME/.bashrc"
     fi
 }
 
@@ -174,14 +77,6 @@ setupMise() {
     fi
 }
 
-sourceRc() {
-
-    if [ -f "$HOME/.bashrc" ]; then
-        shopt -s expand_aliases 2>/dev/null
-        source "$HOME/.bashrc"
-    fi
-}
-
 gopassSetup() {
 
     mkdir -p "$HOME/.config/gopass/"
@@ -203,19 +98,42 @@ gopassSetup() {
 
 bootStrap() {
     containerCheck
-    createDirs
 
+    mkdir -p "$HOME/.bashrc.d"
+    dotlink "bash/.bashrc.d/toolpath.sh" ".bashrc.d/toolpath.sh"
     dotlink "bash/.bashrc.d/prompt.sh" ".bashrc.d/prompt.sh"
+
+    if [[ $CONTAINER == true ]]; then
+        dotlink "bash/.bashrc.d/tmuxcontainer.sh" ".bashrc.d/tmuxcontainer.sh"
+    else
+        dotlink "bash/.bashrc.d/sshagent.sh" ".bashrc.d/sshagent.sh"
+    fi
+
+    mkdir -p "$HOME/.config"
     dotlink "nvim" ".config/nvim"
+
     dotlink "tmux/.tmux.conf" ".tmux.conf"
+
+    mkdir -p "$HOME/.local/bin"
     dotlink "bin/devup" ".local/bin/devup"
+
     dotlink "bin/devssh" ".local/bin/devssh"
     dotlink "bin/devc" ".local/bin/devc"
+
+    mkdir -p "$HOME/.config/mise"
     dotlink "mise/config.toml" ".config/mise/config.toml"
 
     setupMise
-    addBashRc
-    sourceRc
+
+    if ! grep -q ".bashrc.d" "$HOME/.bashrc"; then
+        echo "Adding .bashrc.d sourcing to .bashrc..."
+        echo "$SOURCE" >> "$HOME/.bashrc"
+    fi
+
+    if [ -f "$HOME/.bashrc" ]; then
+        shopt -s expand_aliases 2>/dev/null
+        source "$HOME/.bashrc"
+    fi
 
     gopassSetup
 
