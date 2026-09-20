@@ -3,6 +3,12 @@
 # simple wrapper that runs claude with injecting token for
 # claude specific child process memory
 
-set -e
+set -euo pipefail
 
-ANTHROPIC_API_KEY="$(gopass show -o /api/anthropic/)" command claude "$@"
+if ! ANTHROPIC_API_KEY="$(gopass show -o /api/anthropic/)"; then
+    echo "[ERROR]: Failed to retrieve Secret from gopass." >&2
+    exit 1
+fi
+
+export ANTHROPIC_API_KEY
+exec command claude "$@"

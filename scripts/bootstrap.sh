@@ -6,12 +6,6 @@
 # as well as any tools pre/post installed when given
 # access manually
 
-#TODO:
-    # remove dev_secrets.git repo
-    # restart gopass conifg on both hosts
-    # move text ouptut to readme? for the gopass setup
-    # fix folder creation to look better
-
 CONTAINER=false
 USERBIN="$HOME/.local/bin"
 MISEBIN="$USERBIN/mise"
@@ -30,14 +24,12 @@ if [ -d \"\$HOME/.bashrc.d\" ]; then
     done
 fi
 unset file
-# --- end of .bashrc.d config link ---
-"
+# --- end of .bashrc.d config link ---"
 
 MISEPATH="
 #--- sets mise tool shims to be in path
 export PATH=\"\$HOME/.local/share/mise/shims:\$PATH\"
-#--- end of mise shims config
-"
+#--- end of mise shims config"
 
 TMUX="
 # --- start of devcontainer tmux config ---
@@ -53,23 +45,28 @@ if [[ \$- == *i* ]]; then
         exit 0
     fi
 fi
-# --- end of devcontainer tmux config ---
-"
+# --- end of devcontainer tmux config ---"
 
-GOPASS="
-gopass has no password store set up yet.
+SSHAGENT="
+# --- start of ssh agent forwarding config ---
+# adds ssh socket to allow devpod to forward credentials for devpod
+export SSH_AUTH_SOCK=\"\$HOME/.ssh/ssh-agent.sock\"
 
-setup age crypto backend:
+ssh-add -l > /dev/null 2>&1
+status=\$?
 
-    gopass setup --crypto age
+# 2 = can't reach the agent at all (dead/stale socket)
+if [ \"\$status\" -eq 2 ]; then
+    rm -f \"\$SSH_AUTH_SOCK\"
+    eval \"\$(ssh-agent -a \"\$SSH_AUTH_SOCK\")\" > /dev/null
+    status=1
+fi
 
-Make sure the vault is populated with the secrets you want:
-
-    For example: gopass insert /foo/bar
-
-Then just re-sourceing this script to finalize
-
-"
+# 1 = agent is alive but has no keys loaded yet
+if [ \"\$status\" -ne 0 ]; then
+    ssh-add \"\$HOME/.ssh/id_rsa\"
+fi
+# --- end of ssh socket agent section ---"
 
 containerCheck() {
 
@@ -87,28 +84,12 @@ containerCheck() {
     fi
 }
 
-# fix this to be better... ingegrate with dotlink better
 createDirs() {
 
-    if [ ! -d "$HOME/.config" ]; then
-        echo "Creating .config dir..."
-        mkdir -p "$HOME/.config"
-    fi
-
-    if [ ! -d "$HOME/.local/bin" ]; then
-        echo "Creating .local/bin dir..."
-        mkdir -p "$HOME/.local/bin"
-    fi
-
-    if [ ! -d "$HOME/.bashrc.d" ]; then
-        echo "Creating .bashrc.d dir..."
-        mkdir -p "$HOME/.bashrc.d"
-    fi
-
-    if [ ! -d "$HOME/.config/mise" ]; then
-        echo "Creating .config/mise dir..."
-        mkdir -p "$HOME/.config/mise"
-    fi
+    mkdir -p "$HOME/.config"
+    mkdir -p "$HOME/.local/bin"
+    mkdir -p "$HOME/.bashrc.d"
+    mkdir -p "$HOME/.config/mise"
 }
 
 dotlink() {
@@ -158,14 +139,10 @@ addBashRc() {
         echo "$TMUX" >> "$HOME/.bashrc"
     fi
 
-}
-
-# gopass needs an age identity before it can store/read anything, and
-# generating one requires a human to confirm a passphrase interactively
-checkGopassSetup() {
-    if ! gopass ls >/dev/null 2>&1; then
-        echo "$GOPASS"
-        return 1
+    # SSH forwarding logic only if not in a container
+    if [[ $CONTAINER == false ]] && ! grep -q "start of ssh agent forwarding config" "$HOME/.bashrc"; then
+        echo "Adding SSH agent forwarding to .bashrc..."
+        echo "$SSHAGENT" >> "$HOME/.bashrc"
     fi
 }
 
@@ -205,11 +182,29 @@ sourceRc() {
     fi
 }
 
+gopassSetup() {
+
+    mkdir -p "$HOME/.config/gopass/"
+
+    if ! gopass ls >/dev/null 2>&1; then
+        GOPASS_AGE_STDIN_PASSPHRASE=1 gopass setup --crypto age
+
+        read -rp "How many secrets do you want to insert: " count
+
+        for ((i=0; i<count; i++))
+        do
+            read -rsp "Secret value: " secret
+            read -rp "Location of key in vault: " location
+            echo "$secret" | gopass insert -f -e "$location"
+            echo "Secret inserted"
+        done
+    fi
+}
+
 bootStrap() {
     containerCheck
     createDirs
 
-    # Links files downloaded from github to user environment config locations
     dotlink "bash/.bashrc.d/prompt.sh" ".bashrc.d/prompt.sh"
     dotlink "nvim" ".config/nvim"
     dotlink "tmux/.tmux.conf" ".tmux.conf"
@@ -222,14 +217,9 @@ bootStrap() {
     addBashRc
     sourceRc
 
-    if ! checkGopassSetup; then
-        return
-    fi
+    gopassSetup
 
-    # find way to prompt user for gopass input? for inserting secrets?
-    # loop like how many secrets are you inputing? then loop for that amount
-
-    echo "Bootstrapping finished"
+    echo "Bootstrapping finished!"
 }
 
-bootStrap "$@"
+bootStrap
