@@ -93,7 +93,6 @@ containerCheck() {
     fi
 }
 
-# creates dirs if not already there
 createDirs() {
 
     if [ ! -d "$HOME/.config" ]; then
@@ -121,14 +120,16 @@ createDirs() {
     fi
 }
 
-# function that makes dotfiles link easier
 dotlink() {
+
     local dotLocation="$DOTFILES/$1"
     local confLocation="$HOME/$2"
 
-    if [ ! -d "$confLocation" ] && [ ! -f "$confLocation" ]; then
+    # if already linked then nothing is linked otherwise force it
+    if [ "$(readlink -f "$confLocation")" != "$dotLocation" ]; then
         CHANGED=true
-        echo "Linking [$dotLocation] to [$confLocation]"
+        echo "Linking [$dotLocation] -> [$confLocation]"
+        rm -rf "$confLocation"
         ln -sfn "$dotLocation" "$confLocation"
     fi
 }
